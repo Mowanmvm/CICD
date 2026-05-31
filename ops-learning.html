@@ -1,0 +1,3195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>SRE 运维学习平台 — DevOps Learning Hub</title>
+<style>
+:root { --bg: #0f172a; --bg-card: #1e293b; --bg-card-hover: #273449; --text: #e2e8f0; --text-secondary: #94a3b8; --border: #334155; --accent: #38bdf8; --success: #4ade80; --warning: #fbbf24; --danger: #f87171; --code-bg: #0c1222; --radius: 10px; --shadow: 0 4px 24px rgba(0,0,0,.3); }
+[data-theme="light"] { --bg: #f1f5f9; --bg-card: #fff; --bg-card-hover: #f8fafc; --text: #1e293b; --text-secondary: #64748b; --border: #e2e8f0; --code-bg: #f1f5f9; --shadow: 0 4px 24px rgba(0,0,0,.08); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; transition: background .3s, color .3s; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+.header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+.logo { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; } .logo span { color: var(--accent); }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.search-box { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 6px 16px; color: var(--text); font-size: .875rem; width: 220px; outline: none; transition: .2s; }
+.search-box:focus { border-color: var(--accent); width: 280px; }
+.theme-toggle { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--text); transition: .2s; }
+.theme-toggle:hover { border-color: var(--accent); }
+.progress-bar-wrap { width: 120px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: .4s; }
+.main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; background: var(--bg-card); border-radius: var(--radius); padding: 4px; border: 1px solid var(--border); }
+.tab { padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: .9rem; border: none; background: transparent; color: var(--text-secondary); transition: .2s; white-space: nowrap; }
+.tab:hover { color: var(--text); background: var(--bg); } .tab.active { background: var(--accent); color: #0f172a; }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; transition: .2s; box-shadow: var(--shadow); }
+.card:hover { border-color: var(--accent); } .card h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--accent); } .card p { color: var(--text-secondary); font-size: .9rem; margin-bottom: 8px; }
+.collapsible { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
+.collapsible-header { padding: 14px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; user-select: none; transition: .2s; }
+.collapsible-header:hover { background: var(--bg-card-hover); } .collapsible-header::after { content: '\25B8'; font-size: .8rem; transition: .3s; color: var(--accent); }
+.collapsible.open .collapsible-header::after { transform: rotate(90deg); }
+.collapsible-body { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.collapsible.open .collapsible-body { max-height: 10000px; } .collapsible-content { padding: 0 20px 16px; }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; overflow-x: auto; font-size: .85rem; line-height: 1.6; margin: 10px 0; }
+code { font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; }
+.terminal { background: #0c1222; border: 1px solid #334155; border-radius: var(--radius); padding: 16px; font-family: 'JetBrains Mono', 'Cascadia Code', monospace; font-size: .85rem; color: #e2e8f0; min-height: 200px; max-height: 400px; overflow-y: auto; }
+.terminal .output { color: #94a3b8; white-space: pre-wrap; margin-bottom: 8px; } .terminal .green { color: #4ade80; } .terminal .red { color: #f87171; } .terminal .yellow { color: #fbbf24; } .terminal .blue { color: #38bdf8; }
+.terminal .prompt-line { display: flex; align-items: center; gap: 8px; } .terminal .prompt { color: #4ade80; }
+.terminal input { background: transparent; border: none; color: #e2e8f0; font-family: inherit; font-size: inherit; outline: none; flex: 1; }
+.terminal-toolbar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.terminal-toolbar button { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: .8rem; transition: .2s; }
+.terminal-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: .75rem; font-weight: 600; }
+.tag-linux { background: rgba(56,189,248,.15); color: #38bdf8; } .tag-docker { background: rgba(79,166,248,.15); color: #4fa6f8; } .tag-k8s { background: rgba(129,140,248,.15); color: #818cf8; } .tag-network { background: rgba(74,222,128,.15); color: #4ade80; } .tag-monitor { background: rgba(251,191,36,.15); color: #fbbf24; } .tag-security { background: rgba(248,113,113,.15); color: #f87171; } .tag-cicd { background: rgba(244,114,182,.15); color: #f472b6; } .tag-db { background: rgba(168,85,247,.15); color: #a855f7; } .tag-general { background: rgba(148,163,184,.15); color: #94a3b8; } .tag-sre { background: rgba(244,114,182,.15); color: #f472b6; }
+.severity { padding: 2px 8px; border-radius: 4px; font-size: .75rem; font-weight: 700; }
+.severity.critical { background: #7f1d1d; color: #fca5a5; } .severity.high { background: #78350f; color: #fcd34d; } .severity.medium { background: #1e3a5f; color: #93c5fd; }
+.quiz-option { display: block; padding: 10px 16px; margin: 6px 0; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: .2s; font-size: .9rem; }
+.quiz-option:hover { border-color: var(--accent); } .quiz-option.selected { border-color: var(--accent); background: rgba(56,189,248,.1); } .quiz-option.correct { border-color: var(--success); background: rgba(74,222,128,.1); } .quiz-option.wrong { border-color: var(--danger); background: rgba(248,113,113,.1); }
+.quiz-btn { background: var(--accent); color: #0f172a; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: .9rem; transition: .2s; } .quiz-btn:hover { opacity: .85; } .quiz-btn:disabled { opacity: .4; cursor: not-allowed; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; } .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.flow-chart { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; font-size: .85rem; }
+.flow-node { padding: 8px 14px; border-radius: 8px; font-weight: 600; border: 2px solid var(--border); }
+.flow-node.check { background: rgba(56,189,248,.1); border-color: #38bdf8; } .flow-node.action { background: rgba(74,222,128,.1); border-color: #4ade80; } .flow-node.decision { background: rgba(251,191,36,.1); border-color: #fbbf24; }
+.flow-arrow { color: var(--text-secondary); font-weight: 700; }
+.highlight-box { border-left: 4px solid var(--accent); padding: 12px 16px; background: rgba(56,189,248,.05); border-radius: 0 8px 8px 0; margin: 10px 0; }
+.highlight-box.warn { border-color: var(--warning); background: rgba(251,191,36,.05); } .highlight-box.success { border-color: var(--success); background: rgba(74,222,128,.05); }
+table { width: 100%; border-collapse: collapse; font-size: .875rem; margin: 10px 0; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); } th { color: var(--accent); font-weight: 600; font-size: .8rem; }
+tr:hover { background: var(--bg-card-hover); }
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: #0f172a; padding: 12px 20px; border-radius: 8px; font-weight: 600; z-index: 300; animation: slideUp .3s ease; transition: opacity .3s ease; } @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@media (max-width: 768px) { .tabs { overflow-x: auto; flex-wrap: nowrap; } .search-box { width: 140px; } .search-box:focus { width: 180px; } .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+/* ===== Modal ===== */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:200; display:flex; align-items:center; justify-content:center; }
+.modal-box { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:28px; width:90%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow); }
+.modal-box h2 { margin-bottom:16px; font-size:1.2rem; }
+.modal-close { float:right; background:none; border:none; color:var(--text-secondary); font-size:1.4rem; cursor:pointer; }
+.modal-close:hover { color:var(--text); }
+.modal-box label { display:block; margin:12px 0 4px; font-size:.9rem; color:var(--text-secondary); }
+.modal-box input,.modal-box textarea,.modal-box select { width:100%; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:.9rem; outline:none; transition:.2s; box-sizing:border-box; }
+.modal-box input:focus,.modal-box textarea:focus { border-color:var(--accent); }
+.modal-box textarea { min-height:100px; resize:vertical; font-family:inherit; }
+.modal-box .quiz-btn { margin-top:16px; width:100%; }
+.auth-tabs { display:flex; gap:0; margin-bottom:20px; border-bottom:2px solid var(--border); }
+.auth-tab { flex:1; padding:10px; text-align:center; background:none; border:none; color:var(--text-secondary); font-weight:600; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:.2s; }
+.auth-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+/* ===== Article ===== */
+.article-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; cursor:pointer; transition:.2s; }
+.article-card:hover { border-color:var(--accent); }
+.article-card h3 { font-size:1.05rem; margin-bottom:6px; color:var(--accent); }
+.article-card .meta { font-size:.8rem; color:var(--text-secondary); display:flex; gap:12px; flex-wrap:wrap; }
+.article-card .summary { font-size:.9rem; color:var(--text-secondary); margin:8px 0; }
+.article-detail-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:20px; }
+.article-detail-wrap h1 { font-size:1.5rem; margin-bottom:12px; }
+.article-detail-wrap .meta { font-size:.85rem; color:var(--text-secondary); margin-bottom:16px; display:flex; gap:16px; flex-wrap:wrap; }
+.article-detail-wrap .content { line-height:1.8; font-size:.95rem; }
+.article-detail-wrap .content pre { margin:12px 0; }
+.article-actions { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.article-actions button { background:var(--bg); border:1px solid var(--border); color:var(--text); padding:6px 14px; border-radius:6px; cursor:pointer; font-size:.85rem; transition:.2s; }
+.article-actions button:hover { border-color:var(--accent); color:var(--accent); }
+.article-actions .danger:hover { border-color:var(--danger); color:var(--danger); }
+/* ===== Comment ===== */
+.comment-box { margin-top:24px; }
+.comment-box h3 { font-size:1.1rem; margin-bottom:12px; }
+.comment-form { display:flex; gap:8px; margin-bottom:16px; }
+.comment-form textarea { flex:1; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:.9rem; resize:vertical; min-height:52px; font-family:inherit; outline:none; }
+.comment-form textarea:focus { border-color:var(--accent); }
+.comment-item { padding:12px 0; border-bottom:1px solid var(--border); }
+.comment-item .meta { font-size:.8rem; color:var(--text-secondary); margin-bottom:4px; display:flex; gap:8px; align-items:center; }
+.comment-item .content { font-size:.9rem; line-height:1.5; }
+.comment-item .actions { margin-top:4px; display:flex; gap:8px; }
+.comment-item .actions button { background:none; border:none; color:var(--accent); font-size:.8rem; cursor:pointer; padding:2px 4px; }
+.comment-item .actions button:hover { text-decoration:underline; }
+.comment-item .actions .del-btn { color:var(--danger); cursor:pointer; transition:opacity .2s; }
+.del-btn:hover { opacity:.7; }
+.reply-form { display:flex; gap:8px; margin:8px 0 8px 28px; }
+.reply-form textarea { flex:1; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:.85rem; resize:vertical; min-height:40px; font-family:inherit; outline:none; }
+.reply-form textarea:focus { border-color:var(--accent); }
+.reply-form button { background:var(--accent); color:#0f172a; border:none; padding:6px 14px; border-radius:6px; font-weight:600; cursor:pointer; font-size:.8rem; }
+.reply-form .cancel-btn { background:var(--bg); color:var(--text); border:1px solid var(--border); }
+.user-info { display:flex; align-items:center; gap:8px; cursor:pointer; padding:6px 12px; border-radius:8px; transition:.2s; }
+.user-info:hover { background:var(--bg); }
+.user-avatar { width:30px; height:30px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:700; color:#0f172a; }
+.user-dropdown-menu { position:absolute; top:100%; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:8px 0; min-width:140px; box-shadow:var(--shadow); z-index:150; }
+.user-dropdown-menu div { padding:8px 16px; font-size:.85rem; cursor:pointer; transition:.2s; }
+.user-dropdown-menu div:hover { background:var(--bg); }
+.user-dropdown-menu .username { color:var(--accent); font-weight:600; cursor:default; }
+.user-dropdown-menu .username:hover { background:transparent; }
+.user-dropdown-menu .danger { color:var(--danger); }
+.hidden { display: none !important; } .section-title { font-size: 1.5rem; margin-bottom: 16px; font-weight: 700; margin-top: 32px; }
+.stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.stat-card { flex: 1; min-width: 140px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
+.stat-card .num { font-size: 2rem; font-weight: 700; color: var(--accent); } .stat-card .label { font-size: .8rem; color: var(--text-secondary); margin-top: 4px; }
+
+/* ===== Community Section ===== */
+.comm-header { display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:24px; border-top:2px solid var(--border); }
+.comm-header h2 { font-size:1.3rem; font-weight:700; }
+.comm-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:12px; overflow:hidden; transition:.2s; }
+.comm-card:hover { border-color:var(--accent); }
+.comm-card-header { padding:16px 20px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; user-select:none; transition:.2s; }
+.comm-card-header:hover { background:var(--bg-card-hover); }
+.comm-card-header h4 { font-size:1rem; color:var(--accent); margin:0; }
+.comm-card-meta { font-size:.8rem; color:var(--text-secondary); display:flex; gap:12px; flex-wrap:wrap; margin-top:4px; }
+.comm-card-body { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+.comm-card.open .comm-card-body { max-height:10000px; }
+.comm-card-content { padding:0 20px 16px; line-height:1.7; font-size:.9rem; }
+.comm-inline-comments { padding:0 20px 16px; border-top:1px solid var(--border); margin-top:8px; padding-top:12px; }
+.comm-toggle-icon { color:var(--accent); font-size:.8rem; transition:.3s; }
+.comm-card.open .comm-toggle-icon { transform:rotate(90deg); }
+.comm-empty { text-align:center; padding:24px; color:var(--text-secondary); font-size:.9rem; }
+/* ===== Like Button ===== */
+.like-btn { background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-secondary); padding:4px 12px; cursor:pointer; font-size:.8rem; transition:.2s; display:inline-flex; align-items:center; gap:4px; }
+.like-btn:hover { border-color:var(--accent); color:var(--accent); }
+.like-btn.liked { border-color:var(--danger); color:var(--danger); background:rgba(248,113,113,.1); }
+.like-btn .count { font-weight:600; }
+/* ===== Sort Controls ===== */
+.sort-bar { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+.sort-btn { background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--text-secondary); padding:5px 14px; cursor:pointer; font-size:.8rem; font-weight:600; transition:.2s; }
+.sort-btn:hover { border-color:var(--accent); color:var(--accent); }
+.sort-btn.active { background:var(--accent); color:#0f172a; border-color:var(--accent); }
+/* ===== Profile Modal ===== */
+.profile-header { display:flex; align-items:center; gap:16px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+.profile-avatar { width:64px; height:64px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:700; color:#0f172a; }
+.profile-info h3 { margin:0; font-size:1.1rem; } .profile-info p { margin:4px 0 0; font-size:.85rem; color:var(--text-secondary); }
+.profile-tabs { display:flex; gap:0; margin-bottom:16px; border-bottom:2px solid var(--border); }
+.profile-tab { flex:1; padding:10px; text-align:center; background:none; border:none; color:var(--text-secondary); font-weight:600; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:.2s; }
+.profile-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+/* ===== Reply Fold ===== */
+.reply-toggle { font-size:.8rem; color:var(--accent); cursor:pointer; padding:4px 0; margin-top:4px; display:inline-block; user-select:none; }
+.reply-toggle:hover { text-decoration:underline; }
+.reply-container { margin-top:4px; }
+
+</style>
+</head>
+<body data-theme="dark">
+
+<header class="header">
+  <div class="logo">&#x1F5A5; <span>SRE</span> Learning Hub</div>
+  <div class="header-right">
+    <input class="search-box" id="searchBox" placeholder="&#x1F50D; 搜索知识点...">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+    <span style="font-size:.75rem;color:var(--text-secondary)" id="progressLabel">0%</span>
+    <button class="theme-toggle" id="themeToggle" title="切换主题">&#x1F319;</button>
+    <button class="login-btn" id="loginBtn" style="background:var(--accent);color:#0f172a;border:none;padding:6px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;transition:.2s;white-space:nowrap">登录</button>
+    <div class="user-info hidden" id="userInfo" style="position:relative">
+      <div class="user-avatar" id="userAvatar">U</div>
+      <span id="userDisplayName" style="font-size:.85rem;font-weight:600;color:var(--text)"></span>
+      <div class="user-dropdown-menu hidden" id="userDropdown">
+        <div class="username" id="dropdownUsername">用户</div>
+        <div id="dropdownWrite">✏️ 写文章</div>
+        <div id="dropdownProfile">👤 个人信息</div>
+        <div id="dropdownPassword">🔑 修改密码</div>
+        <div id="dropdownAdmin" class="hidden">📋 用户管理</div>
+        <div id="dropdownLogout" style="color:var(--danger)">退出登录</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <nav class="tabs" id="tabNav">
+    <button class="tab active" data-tab="fault">&#x1F527; 故障分析</button>
+    <button class="tab" data-tab="knowledge">&#x1F4DA; 运维知识</button>
+    <button class="tab" data-tab="practice">&#x1F4BB; 实操演练</button>
+    <button class="tab" data-tab="project">&#x1F680; 项目学习</button>
+    <button class="tab" data-tab="interview">&#x1F3AF; 面试高频题</button>
+  </nav>
+
+<!-- ===== 故障分析 ===== -->
+<section id="tab-fault">
+<div class="stats-row"><div class="stat-card"><div class="num">12</div><div class="label">典型故障场景</div></div><div class="stat-card"><div class="num">6</div><div class="label">排查方法论</div></div><div class="stat-card"><div class="num">50+</div><div class="label">诊断命令</div></div></div>
+
+<h2 class="section-title" style="margin-top:0">常见故障排查手册</h2>
+
+<div class="collapsible" data-id="f-cpu"><div class="collapsible-header"><span>&#x1F5A5; CPU 使用率飙升 — 线上服务响应慢</span><span class="severity high">P1</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<div class="highlight-box warn"><strong>故障现象：</strong>用户反馈页面加载缓慢，监控告警 CPU > 90%，load average 持续升高。</div>
+<h4>排查流程</h4>
+<div class="flow-chart"><span class="flow-node check">top/htop 确认CPU</span><span class="flow-arrow">&#x2192;</span><span class="flow-node decision">PID 定位进程</span><span class="flow-arrow">&#x2192;</span><span class="flow-node check">top -Hp PID 找线程</span><span class="flow-arrow">&#x2192;</span><span class="flow-node action">jstack / perf 分析</span><span class="flow-arrow">&#x2192;</span><span class="flow-node action">定位代码 &amp; 修复</span></div>
+<h4>关键命令</h4>
+<pre><code>top -c                           # 整体 CPU 和 load
+ps aux --sort=-%cpu | head -10   # CPU 最高的进程
+top -Hp PID                      # 进程下线程 CPU 占用
+printf "%x\n" TID               # 线程 ID 转 16 进制
+jstack PID | grep -A 30 HEX_TID # Java 线程栈分析
+perf top -p PID                  # 通用：perf 采样
+perf record -p PID -g -- sleep 30 && perf report
+strace -p PID -c -f              # 系统调用统计</code></pre>
+<h4>常见根因</h4>
+<table><tr><th>根因</th><th>特征</th><th>解决方向</th></tr>
+<tr><td>死循环/密集计算</td><td>单线程 CPU 100%</td><td>review 代码逻辑</td></tr>
+<tr><td>频繁 GC (Java)</td><td>GC 日志 Full GC 频繁</td><td>调优 JVM、排查内存泄漏</td></tr>
+<tr><td>正则回溯</td><td>特定请求触发</td><td>优化为线性匹配</td></tr>
+<tr><td>上下文切换过多</td><td>si 高+线程数多</td><td>减少线程、使用协程</td></tr></table></div></div></div>
+
+<div class="collapsible" data-id="f-mem"><div class="collapsible-header"><span>&#x1F9E0; 内存泄漏 — OOM Killer 杀进程</span><span class="severity critical">P0</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<div class="highlight-box warn"><strong>故障现象：</strong>服务不定时重启，dmesg 显示 "Out of memory: Killed process"，内存持续增长。</div>
+<pre><code>dmesg -T | grep -i "out of memory"     # OOM 记录
+free -h && cat /proc/meminfo           # 内存概况
+ps aux --sort=-%mem | head -10          # 按内存排序
+pmap -x PID | sort -nrk3 | head -20    # 进程内存映射
+jmap -dump:format=b,file=heap.hprof PID # Java 堆 dump (用 MAT 分析)
+slabtop                                # 内核 slab 内存
+# 被删除但未释放的文件: lsof | grep deleted (常见磁盘空间满原因)</code></pre>
+<h4>各语言排查工具</h4>
+<table><tr><th>语言</th><th>工具</th><th>关键指标</th></tr>
+<tr><td>Java</td><td>jstat / jmap / arthas</td><td>堆内存、GC、Metaspace</td></tr>
+<tr><td>Go</td><td>pprof / go tool trace</td><td>heap inuse、goroutine 数量</td></tr>
+<tr><td>Python</td><td>tracemalloc / objgraph</td><td>对象引用计数</td></tr>
+<tr><td>Node.js</td><td>--inspect / clinic</td><td>heap snapshot 对比</td></tr>
+<tr><td>C/C++</td><td>valgrind / AddressSanitizer</td><td>malloc/free 配对</td></tr></table></div></div></div>
+
+<div class="collapsible" data-id="f-disk"><div class="collapsible-header"><span>&#x1F4BE; 磁盘 I/O 瓶颈 — 服务大量超时</span><span class="severity high">P1</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>iostat -x 1                          # 磁盘 I/O 实时监控
+iotop -oP                            # 哪个进程在大量读写
+pidstat -d 1                         # 进程级别 I/O 统计
+df -h && df -i                       # 磁盘空间和 inode
+du -sh /* 2>/dev/null | sort -rh | head -10  # 大目录
+lsof | grep deleted                  # 已删除未释放的文件
+smartctl -a /dev/sda                 # 磁盘健康状态</code></pre>
+<h4>关键指标解读</h4>
+<table><tr><th>指标</th><th>含义</th><th>告警阈值</th></tr>
+<tr><td>await</td><td>I/O 平均等待时间</td><td>&gt; 20ms</td></tr>
+<tr><td>%util</td><td>磁盘繁忙率</td><td>&gt; 80%</td></tr>
+<tr><td>avgqu-sz</td><td>平均队列长度</td><td>&gt; 1</td></tr></table></div></div></div>
+
+<div class="collapsible" data-id="f-net"><div class="collapsible-header"><span>&#x1F310; 网络故障 — 连接超时/丢包</span><span class="severity high">P1</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>ping -c 10 target && mtr -r target   # 连通性+路由追踪
+nc -zv host port                     # 端口检测
+ss -s                                # TCP 连接状态汇总
+ss -tan state time-wait | wc -l      # TIME_WAIT 数量
+tcpdump -i eth0 -nn port 8080 -w cap.pcap  # 抓包
+tcpdump -i eth0 -nn 'tcp[tcpflags] & (tcp-rst) != 0'  # 抓 RST 包
+netstat -s | grep -i retrans         # 重传统计
+iptables -L -n -v                    # 防火墙规则
+dig +trace domain                    # DNS 追踪</code></pre>
+<h4>TCP 状态异常速查</h4>
+<table><tr><th>状态</th><th>原因</th><th>解决</th></tr>
+<tr><td>TIME_WAIT 过多</td><td>短连接过多</td><td>tcp_tw_reuse、长连接</td></tr>
+<tr><td>CLOSE_WAIT 过多</td><td>服务端未 close</td><td>检查代码资源释放</td></tr>
+<tr><td>SYN_RECV 过多</td><td>可能 SYN Flood</td><td>syn cookie、限流</td></tr></table></div></div></div>
+
+<div class="collapsible" data-id="f-db"><div class="collapsible-header"><span>&#x1F5C4; 数据库故障 — 慢查询/死锁/连接池耗尽</span><span class="severity critical">P0</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>SHOW FULL PROCESSLIST;               # 当前所有连接+查询
+SELECT * FROM information_schema.INNODB_TRX;  # 当前事务
+-- 长事务排查（超过30秒的）
+SELECT trx_id, TIMESTAMPDIFF(SECOND, trx_started, NOW()) AS dur
+FROM information_schema.INNODB_TRX WHERE TIMESTAMPDIFF(SECOND, trx_started, NOW()) > 30;
+SHOW ENGINE INNODB STATUS\G           # 死锁日志
+SHOW VARIABLES LIKE 'max_connections';
+SHOW STATUS LIKE 'Threads_connected';
+SHOW VARIABLES LIKE 'slow_query%';    # 慢查询配置</code></pre>
+<h4>连接池耗尽排查</h4>
+<div class="flow-chart"><span class="flow-node check">SHOW PROCESSLIST</span><span class="flow-arrow">&#x2192;</span><span class="flow-node decision">连接数 &gt; 80%?</span><span class="flow-arrow">&#x2192;</span><span class="flow-node check">查看 Sleep 连接</span><span class="flow-arrow">&#x2192;</span><span class="flow-node action">应用侧检查连接泄漏</span></div></div></div></div>
+
+<div class="collapsible" data-id="f-app"><div class="collapsible-header"><span>&#x1F4F1; 应用层故障 — 接口超时/缓存雪崩</span><span class="severity critical">P0</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>常见故障模式 &amp; 应对</h4>
+<table><tr><th>故障模式</th><th>临时止血</th><th>长期方案</th></tr>
+<tr><td>下游服务变慢</td><td>熔断/降级返回缓存</td><td>超时、连接池隔离</td></tr>
+<tr><td>线程池打满</td><td>重启扩容、入口限流</td><td>线程池隔离、信号量</td></tr>
+<tr><td>慢 SQL 拖垮连接池</td><td>Kill 慢查询、限流</td><td>SQL 优化、读写分离</td></tr>
+<tr><td>缓存雪崩</td><td>手动预热</td><td>高可用+异步更新</td></tr>
+<tr><td>缓存击穿</td><td>互斥锁取数据</td><td>热点永不过期+异步更新</td></tr>
+<tr><td>死锁</td><td>Kill 持锁事务</td><td>统一加锁顺序、索引优化</td></tr></table></div></div></div>
+
+<h2 class="section-title">排查方法论</h2>
+<div class="grid-3">
+<div class="card"><h3>&#x1F50D; 5-Why 分析法</h3><p>连续追问 5 个"为什么"找到根因。例：服务挂了 &#x2192; 为什么？OOM &#x2192; 为什么？内存泄漏 &#x2192; 为什么？某接口未关流 &#x2192; 为什么？代码缺少 finally &#x2192; 修复！</p></div>
+<div class="card"><h3>&#x1F4CA; USE 方法论</h3><p>对每种资源检查：<strong>U</strong>tilization（使用率）、<strong>S</strong>aturation（饱和度）、<strong>E</strong>rrors（错误数）。覆盖 CPU、内存、磁盘、网络。</p></div>
+<div class="card"><h3>&#x1FA7A; RED 方法论</h3><p>面向服务的监控：<strong>R</strong>ate（请求速率）、<strong>E</strong>rrors（错误率）、<strong>D</strong>uration（延迟）。适合微服务。</p></div>
+<div class="card"><h3>&#x1F4C8; 四个黄金信号</h3><p>Google SRE 提出：延迟、流量、错误、饱和度。最经典监控框架。</p></div>
+<div class="card"><h3>&#x1FAAA; 分层排查法</h3><p>物理层 &#x2192; 网络层 &#x2192; 系统层 &#x2192; 中间件层 &#x2192; 应用层。避免跳跃式排查。</p></div>
+<div class="card"><h3>&#x1F504; 变更关联法</h3><p>70%的故障由变更引起。最近发布了什么？改了配置？依赖变化？从变更记录入手是最快的方式。</p></div>
+</div>
+</section><!-- ===== 运维知识 ===== -->
+<section id="tab-knowledge" class="hidden">
+<div class="stats-row"><div class="stat-card"><div class="num">200+</div><div class="label">知识条目</div></div><div class="stat-card"><div class="num">12</div><div class="label">知识领域</div></div><div class="stat-card"><div class="num">500+</div><div class="label">命令示例</div></div></div>
+
+<div class="card" style="margin-bottom:20px"><h3>&#x1F4D1; 知识模块速览</h3>
+<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:.85rem">
+<a href="#k-linux" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F427; Linux基础</a>
+<a href="#k-shell" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F4DC; Shell基础</a>
+	<a href="#k-scripts" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F4DD; Shell脚本</a>
+<a href="#k-text" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F50D; 文本处理</a>
+<a href="#k-docker" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F433; Docker</a>
+<a href="#k-k8s" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x2638; K8s</a>
+<a href="#k-network" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F310; 网络协议</a>
+<a href="#k-nginx" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F500; Nginx</a>
+<a href="#k-mysql" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F5C4; MySQL</a>
+<a href="#k-redis" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x26A1; Redis</a>
+<a href="#k-monitor" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F4CA; 监控</a>
+<a href="#k-cicd" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F504; CI/CD</a>
+<a href="#k-security" style="padding:4px 12px;background:var(--bg);border-radius:6px">&#x1F512; 安全</a>
+</div></div>
+
+<!-- ===== Linux ===== -->
+<h2 class="section-title" id="k-linux" style="margin-top:0">&#x1F427; Linux 核心知识</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>文件系统 &amp; 权限管理（基础必会）</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>Linux 目录结构速览</h4>
+<table><tr><th>目录</th><th>用途</th><th>运维关注点</th></tr>
+<tr><td>/etc</td><td>系统配置文件</td><td>nginx、ssh、systemd 配置都在这里</td></tr>
+<tr><td>/var</td><td>可变数据（日志、缓存）</td><td>/var/log 日志目录经常爆满</td></tr>
+<tr><td>/proc</td><td>虚拟文件系统</td><td>排查宝库：cpuinfo, meminfo, loadavg, PID/</td></tr>
+<tr><td>/tmp</td><td>临时文件（重启清空）</td><td>不要存重要数据</td></tr>
+<tr><td>/opt</td><td>第三方软件</td><td>自定义应用通常放这里</td></tr>
+<tr><td>/boot</td><td>内核和引导文件</td><td>满了会导致无法安装新内核</td></tr>
+</table>
+<h4>权限详解</h4>
+<pre><code># 权限数字：r=4 w=2 x=1，累加即可
+# 755 = rwxr-xr-x (owner全权限, group/other读+执行)
+# 644 = rw-r--r-- (owner读写, 其他只读)
+# 600 = rw------- (只有owner可读写，适合私钥)
+
+chmod 755 file && chown user:group file
+chmod u+x file && chmod go-w file
+chattr +i file           # 文件不可变（root 也不能删）
+lsattr file              # 查看特殊属性
+
+# SUID/SGID/Sticky Bit
+find / -perm -4000 2>/dev/null   # 查找所有 SUID 文件（安全审计）
+
+# 查找大文件
+find / -type f -size +100M -exec ls -lh {} \; 2>/dev/null
+du -sh /opt/* | sort -rh | head -10
+
+# 文件描述符
+lsof -p PID | wc -l      # 进程打开的 fd 数
+ulimit -n                 # 当前 fd 上限（服务端务必调大到 65536）
+cat /proc/PID/limits      # 进程资源限制
+
+# 被删除但未释放（常见磁盘满原因）
+lsof | grep deleted</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>进程状态 &amp; 线程管理</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>进程状态码速查（ps STAT 列）</h4>
+<table><tr><th>状态</th><th>含义</th></tr>
+<tr><td>R</td><td>Running / Runnable（正在运行或等待CPU）</td></tr>
+<tr><td>S</td><td>Sleeping（可中断睡眠）</td></tr>
+<tr><td>D</td><td>Uninterruptible Sleep（不可中断，等 I/O）&#x26A0; 高 D 状态 = I/O 瓶颈</td></tr>
+<tr><td>Z</td><td>Zombie（僵尸，父进程未回收）</td></tr>
+<tr><td>T</td><td>Stopped（被暂停）</td></tr>
+</table>
+<pre><code>ps aux                  # BSD 风格，所有进程
+ps -ef                  # 标准风格
+ps -eo pid,ppid,user,%cpu,%mem,cmd --sort=-%cpu | head
+pstree -p PID           # 进程树（排查多进程服务）
+cat /proc/PID/status | grep Threads  # 线程数
+top -H -p PID           # 实时看每线程 CPU
+
+kill -l                 # 列出所有信号
+kill -15 PID            # SIGTERM：优雅终止（推荐）
+kill -9 PID             # SIGKILL：强制杀（不推荐）
+kill -3 PID             # SIGQUIT：Java dump 线程栈
+kill -HUP PID           # SIGHUP：重新加载配置
+
+nice -n 10 command      # 低优先级启动（-20 最高，19 最低）
+renice -5 -p PID        # 调整优先级</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>用户/组管理 &amp; sudo</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>useradd -m -s /bin/bash username         # 创建用户
+useradd -u 1001 -g appgroup appuser      # 指定 UID 和组
+usermod -aG docker appuser               # 加到 docker 组
+userdel -r username                      # 删除用户
+passwd -l username                       # 锁定密码
+chage -l username                        # 查看密码过期策略
+
+# 用户/组信息
+cat /etc/passwd   # 用户列表
+cat /etc/shadow   # 密码哈希（只有 root 能看）
+cat /etc/group    # 组列表
+w; who; last; lastb   # 当前登录、最近登录、失败记录
+
+# sudo 配置 (visudo 编辑)
+# username ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nginx
+# 原则：最小权限，只给必要的命令</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>Systemd 服务管理 &amp; 定时任务</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>systemctl status/start/stop/restart/reload nginx
+systemctl enable/disable nginx           # 开机自启
+systemctl list-units --state=failed      # 查看失败的服务
+systemctl daemon-reload                  # 重载 unit 文件
+
+journalctl -u nginx -f                   # 实时
+journalctl -u nginx --since "10 min ago"
+journalctl -u nginx -p err               # 只看错误
+
+systemd-analyze                          # 启动总耗时
+systemd-analyze blame                    # 各服务启动耗时排行</code></pre>
+<h4>Service Unit 模板</h4>
+<pre><code>[Unit]
+Description=My Application
+After=network.target
+
+[Service]
+Type=simple
+User=app
+WorkingDirectory=/opt/app
+ExecStart=/opt/app/bin/start.sh
+ExecStop=/opt/app/bin/stop.sh
+Restart=on-failure
+RestartSec=10
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+<h4>Crontab 定时任务</h4>
+<pre><code># 格式：分 时 日 月 周 命令
+# */5 * * * *  每5分钟  0 2 * * *  每天凌晨2点
+
+crontab -l && crontab -e               # 列出/编辑
+sudo crontab -u app -e                  # 编辑指定用户的
+ls /etc/cron.d/ && ls /etc/cron.daily/ # 系统级别
+
+# 排查：定时任务没执行？
+# 1. grep CRON /var/log/syslog
+# 2. 用绝对路径！cron 环境变量很少
+# 3. 脚本要有执行权限</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>包管理 &amp; LVM 磁盘管理</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>包管理器对比</h4>
+<table><tr><th>发行版</th><th>包管理器</th><th>常用命令</th></tr>
+<tr><td>Debian/Ubuntu</td><td>apt</td><td>apt install/remove; apt-mark hold</td></tr>
+<tr><td>RHEL/CentOS7</td><td>yum</td><td>yum install/remove</td></tr>
+<tr><td>CentOS8+/Fedora</td><td>dnf</td><td>dnf install/remove; dnf history</td></tr>
+<tr><td>Alpine</td><td>apk</td><td>apk add/del</td></tr>
+</table>
+<h4>LVM 磁盘管理（核心优势：在线扩容）</h4>
+<pre><code>pvs && vgs && lvs                      # 查看
+pvcreate /dev/sdb && vgcreate vg_data /dev/sdb
+lvcreate -L 50G -n lv_mysql vg_data
+mkfs.ext4 /dev/vg_data/lv_mysql
+mount /dev/vg_data/lv_mysql /data/mysql
+
+# 在线扩容（无需卸载！）
+lvextend -L +20G /dev/vg_data/lv_mysql
+resize2fs /dev/vg_data/lv_mysql        # ext4
+xfs_growfs /data/mysql                  # xfs</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>iptables / firewalld 防火墙</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code># iptables (5条链: PREROUTING/INPUT/FORWARD/OUTPUT/POSTROUTING)
+iptables -L -n -v --line-numbers
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -s 192.168.1.0/24 -j ACCEPT
+iptables -D INPUT 3                     # 删除第3条
+iptables-save > /etc/iptables.rules     # 保存
+
+# firewalld (CentOS 7+)
+firewall-cmd --list-all
+firewall-cmd --add-port=8080/tcp --permanent
+firewall-cmd --reload</code></pre>
+<div class="highlight-box warn"><strong>&#x26A0; 注意：</strong>修改 iptables 前务必保留 SSH 允许规则，否则可能把自己锁在外面！</div></div></div></div>
+
+<!-- ===== Shell ===== -->
+<h2 class="section-title" id="k-shell">&#x1F4DC; Shell 脚本编程基础</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>Shell 基础语法速成</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>#!/bin/bash
+set -euo pipefail  # 严格模式：错误退出、未定义变量报错
+
+NAME="hello" && readonly PI=3.14
+echo "${NAME}_world"     # 用 {} 包裹变量名
+
+# 特殊变量
+echo $0 $1 $2            # 脚本名, 第1/2个参数
+echo $# $@ $?            # 参数个数, 所有参数, 上条命令退出码
+
+# 条件判断
+if [ "$a" -eq "$b" ]; then          # 数字：-eq -ne -gt -lt
+  echo "equal"
+elif [ -f "/etc/nginx/nginx.conf" ]; then  # 文件：-f -d -x
+  echo "file exists"
+fi
+
+# 字符串判断用 [[ ]] (支持正则)
+if [[ "$str" =~ ^[0-9]+$ ]]; then echo "is number"; fi
+
+# 循环
+for i in {1..10}; do echo $i; done
+for file in /var/log/*.log; do gzip "$file"; done
+while read line; do echo "$line"; done < /etc/hosts</code></pre>
+
+<h4>实用脚本模板：服务健康检查 + 自动重启 + 告警</h4>
+<pre><code>#!/bin/bash
+set -euo pipefail
+SERVICE="nginx"
+LOG="/var/log/health_check.log"
+WEBHOOK="https://hooks.slack.com/xxx"
+
+if ! systemctl is-active --quiet "$SERVICE"; then
+    echo "$(date) $SERVICE DOWN, restarting..." >> "$LOG"
+    systemctl restart "$SERVICE"
+    sleep 5
+    if systemctl is-active --quiet "$SERVICE"; then
+        echo "$(date) $SERVICE restarted OK" >> "$LOG"
+    else
+        echo "$(date) $SERVICE restart FAILED!" >> "$LOG"
+        curl -X POST -H "Content-Type: application/json" \
+          -d '{"text":"'"$SERVICE restart failed!"'"}' "$WEBHOOK"
+    fi
+fi</code></pre></div></div></div>
+
+    <!-- ===== Shell Scripts Module ===== -->
+<div class="collapsible" id="k-scripts"><div class="collapsible-header"><span>日常运维常用脚本模块（每条命令详解）</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<p style="color:var(--text-secondary);margin-bottom:12px">以下脚本覆盖日常巡检、日志监控、备份、部署、批量操作、网络诊断等场景，每条命令都标注了用法说明。</p>
+
+<h4>1. 系统健康巡检脚本 — 一键收集服务器关键指标</h4>
+<pre><code>#!/bin/bash
+# 用途：快速收集 CPU、内存、磁盘、网络、系统负载等关键信息，用于日常巡检或故障排查
+
+echo "===== 系统基本信息 ====="
+uname -a                    # 显示内核版本、主机名、架构等全部系统信息
+hostname                    # 显示当前主机名
+uptime                      # 显示系统运行时间、登录用户数、load average（1/5/15分钟平均负载）
+
+echo -e "\n===== CPU 信息 ====="
+lscpu                       # 显示 CPU 架构信息（型号、核心数、频率、缓存等）
+top -bn1 | head -5          # top 批处理模式(-b)执行1次(-n1)，显示前5行，含CPU总体使用率和负载
+mpstat -P ALL 1 1           # 显示每个CPU核心的使用率（需 sysstat 包），判断是否单核瓶颈
+
+echo -e "\n===== 内存信息 ====="
+free -h                     # 以人类可读(-h)单位显示物理内存和交换分区使用情况
+cat /proc/meminfo | grep -E "^(MemTotal|MemAvailable|SwapTotal|SwapFree)"  # 从/proc读取原始内存数据
+
+echo -e "\n===== 磁盘信息 ====="
+df -hT                      # 显示所有分区的磁盘使用量(-h)和文件系统类型(-T)
+lsblk                       # 列出所有块设备（磁盘、分区、LVM），以树形结构显示挂载关系
+du -sh /* 2>/dev/null | sort -rh | head -10  # 统计根目录下各目录大小，降序排序取前10
+
+echo -e "\n===== 网络信息 ====="
+ip addr                     # 显示所有网络接口的IP地址、MAC地址、状态（替代已淘汰的 ifconfig）
+ss -tlnp                    # 显示所有 TCP(-t) 监听(-l) 端口，不解析服务名(-n)，显示进程(-p)
+ip route                    # 显示路由表（默认网关、路由规则）
+
+echo -e "\n===== 运行进程 ====="
+ps aux --sort=-%cpu | head -10   # 所有进程按CPU使用率降序排序，取前10个
+ps aux --sort=-%mem | head -10   # 所有进程按内存使用率降序排序，取前10个
+systemctl list-units --state=failed  # 列出所有启动失败的服务（快速发现异常）</code></pre>
+
+<h4>2. 日志实时监控与告警脚本 — 滚动监控日志并触发告警</h4>
+<pre><code>#!/bin/bash
+# 用途：实时监控应用程序日志，当出现 ERROR/FATAL 等关键字时触发告警
+# 用法：./log_watcher.sh /var/log/app/app.log "ERROR|FATAL|Exception"
+
+LOG_FILE="${1:-/var/log/syslog}"       # 第一个参数：日志文件路径，默认 /var/log/syslog
+KEYWORD="${2:-ERROR|FATAL}"            # 第二个参数：匹配关键字，支持正则 OR
+ALERT_URL="https://hooks.xxx.com/send" # 告警 webhook 地址（钉钉/飞书/企微机器人）
+
+if [ ! -f "$LOG_FILE" ]; then          # -f 判断文件是否存在且为普通文件
+    echo "错误：日志文件 $LOG_FILE 不存在！"
+    exit 1                             # exit 非0表示脚本异常退出
+fi
+
+tail -F "$LOG_FILE" | while read line; do     # tail -F 跟踪文件（含文件轮转），逐行读取
+    if echo "$line" | grep -qE "$KEYWORD"; then  # grep -q 静默模式（不输出），-E 扩展正则
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] 发现匹配: $line" | tee -a /var/log/alert.log
+        # date 格式化时间戳，tee -a 同时输出到屏幕和追加到文件
+
+        curl -s --connect-timeout 5 -X POST -H "Content-Type: application/json" \
+            -d "{\"msg\": \"【告警】$HOSTNAME 日志匹配: $KEYWORD\n$line\"}" "$ALERT_URL" \
+            || echo "发送告警失败"  # || 表示上条命令失败时执行
+    fi
+done</code></pre>
+
+<h4>3. 磁盘空间自动清理脚本 — 防止磁盘写满导致服务宕机</h4>
+<pre><code>#!/bin/bash
+# 用途：检查磁盘使用率，超过阈值则自动清理指定目录的老文件，并发送告警
+# 用法：配合 crontab 定时执行：0 */6 * * * /opt/scripts/disk_clean.sh
+
+THRESHOLD=85                 # 磁盘使用率告警阈值（百分比）
+CLEAN_DIRS=("/var/log" "/tmp")  # 需要清理的目录列表（用空格分隔）
+RETENTION_DAYS=7             # 保留天数，超过此天数的文件将被删除
+ALERT_EMAIL="admin@example.com"
+
+USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+# df 获取根分区使用率，awk 'NR==2 {print $5}' 取第二行第五列（Use%），sed 去掉百分号
+
+echo "[$(date)] 当前根分区使用率: ${USAGE}%"
+
+if [ "$USAGE" -gt "$THRESHOLD" ]; then    # -gt 表示大于（great than）
+    echo "磁盘使用率超过阈值 ${THRESHOLD}%，开始清理..."
+
+    for DIR in "${CLEAN_DIRS[@]}"; do     # 遍历待清理目录列表
+        if [ -d "$DIR" ]; then            # -d 判断是否为目录
+            FILES_COUNT=$(find "$DIR" -type f -mtime +$RETENTION_DAYS 2>/dev/null | wc -l)
+            # find -mtime +N N天前修改过的文件，wc -l 统计数量
+
+            if [ "$FILES_COUNT" -gt 0 ]; then
+                find "$DIR" -type f -mtime +$RETENTION_DAYS -delete 2>/dev/null
+                echo "已清理 $DIR 中 $RETENTION_DAYS 天前的文件 ${FILES_COUNT} 个"
+            fi
+        fi
+    done
+
+    NEW_USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+    echo "清理后使用率: ${NEW_USAGE}%"
+
+    if [ "$NEW_USAGE" -gt "$THRESHOLD" ]; then
+        echo "清理后仍超阈值，发送告警通知"
+        mail -s "[警告] $(hostname) 磁盘使用率 ${NEW_USAGE}%" "$ALERT_EMAIL" <<< \
+            "服务器 $(hostname) 磁盘使用率达 ${NEW_USAGE}%，请及时处理！"
+    fi
+fi</code></pre>
+
+<h4>4. 批量远程主机管理脚本 — 在多台服务器上并行执行命令</h4>
+<pre><code>#!/bin/bash
+# 用途：通过 SSH 在批量服务器上执行命令，用于配置下发、状态采集、补丁更新等
+# 前提：已配置 SSH 免密登录（ssh-copy-id）
+
+HOSTS_FILE="hosts.txt"      # 主机列表文件，每行一个 IP 或主机名
+SSH_USER="root"              # SSH 登录用户名
+SSH_PORT=22                  # SSH 端口
+TIMEOUT=10                   # SSH 连接超时秒数
+LOG_DIR="./batch_logs"       # 日志输出目录
+
+mkdir -p "$LOG_DIR"          # -p 递归创建目录，如果已存在也不报错
+TIMESTAMP=$(date '+%Y%m%d_%H%M%S')  # 时间戳，用于日志文件名
+
+if [ ! -f "$HOSTS_FILE" ]; then
+    echo "错误：主机列表文件 $HOSTS_FILE 不存在！"
+    echo "创建格式：每行一个 IP，如："
+    echo -e "192.168.1.1\n192.168.1.2"
+    exit 1
+fi
+
+echo "=== 批量执行开始: $(date) ==="
+echo "目标主机: $(wc -l < "$HOSTS_FILE") 台"
+
+while IFS= read -r host; do          # IFS= 防止行首尾空格被去掉，-r 防止反斜杠转义
+    [ -z "$host" ] && continue       # -z 判断字符串为空则跳过空行
+    [[ "$host" =~ ^# ]] && continue  # 跳过以 # 开头的注释行（=~ 正则匹配）
+
+    echo -e "\n>>> 正在连接: $host"
+    LOG_FILE="${LOG_DIR}/${host}_${TIMESTAMP}.log"
+
+    ssh -o StrictHostKeyChecking=no -o ConnectTimeout=$TIMEOUT \
+        -p "$SSH_PORT" "${SSH_USER}@${host}" "$@" > "$LOG_FILE" 2>&1
+
+    if [ $? -eq 0 ]; then            # $? 上一条命令的退出码，0 表示成功
+        echo "[成功] $host — 输出已保存到 $LOG_FILE"
+    else
+        echo "[失败] $host — 请检查网络或认证配置"
+    fi
+done < "$HOSTS_FILE"                 # 将文件内容重定向给 while 循环作为输入
+
+echo "=== 批量执行结束: $(date) ==="
+echo "日志目录: $LOG_DIR"</code></pre>
+
+<h4>5. MySQL 数据库自动备份脚本 — 全量备份与清理</h4>
+<pre><code>#!/bin/bash
+# 用途：自动备份 MySQL 数据库，保留最近7天备份，支持压缩和远程同步
+# 用法：配合 crontab：0 3 * * * /opt/scripts/mysql_backup.sh
+
+DB_USER="backup"             # 数据库备份用户（建议创建专用用户，最小权限）
+DB_PASS="your_password"      # 密码（生产环境建议使用 my.cnf 配置文件，避免密码明文）
+DB_HOST="localhost"
+DB_PORT=3306
+BACKUP_DIR="/data/backup/mysql"     # 备份文件存储目录
+RETENTION_DAYS=7                     # 保留最近 N 天的备份
+REMOTE_BACKUP="admin@backup-server:/backup/mysql"  # 远程备份地址（可选）
+
+mkdir -p "$BACKUP_DIR/$(date +%Y%m%d)"  # 按日期创建子目录
+
+# 获取所有数据库列表，排除系统库
+DATABASES=$(mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" -P"$DB_PORT" \
+    -e "SHOW DATABASES;" -N -B 2>/dev/null | grep -Ev "information_schema|performance_schema|mysql|sys")
+# mysql -N 不显示列名，-B 批处理模式，grep -Ev 排除系统库
+
+for DB in $DATABASES; do
+    echo "正在备份数据库: $DB"
+    BACKUP_FILE="${BACKUP_DIR}/$(date +%Y%m%d)/${DB}_$(date +%H%M%S).sql"
+
+    # mysqldump --single-transaction InnoDB 热备不加锁
+    # --routines 包含存储过程，--triggers 包含触发器
+    mysqldump -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" -P"$DB_PORT" \
+        --single-transaction --routines --triggers --quick \
+        "$DB" 2>/dev/null > "$BACKUP_FILE"
+
+    gzip -f "$BACKUP_FILE"  # gzip 压缩备份文件（可压缩 5-10 倍）
+    echo "  完成: ${BACKUP_FILE}.gz ($(du -h "${BACKUP_FILE}.gz" | cut -f1))"
+done
+
+find "$BACKUP_DIR" -type d -mtime +$RETENTION_DAYS -exec rm -rf {} \; 2>/dev/null
+echo "已清理 ${RETENTION_DAYS} 天前的旧备份"
+
+if [ -n "$REMOTE_BACKUP" ]; then            # -n 判断字符串非空
+    rsync -avz --delete "$BACKUP_DIR/" "$REMOTE_BACKUP" --log-file=/var/log/backup_rsync.log
+    # rsync -a 归档模式，-v 详细，-z 传输压缩，--delete 两端保持一致
+fi
+echo "备份全部完成: $(date '+%Y-%m-%d %H:%M:%S')"</code></pre>
+
+<h4>6. 服务自动部署脚本 — 从代码拉取到优雅重启</h4>
+<pre><code>#!/bin/bash
+# 用途：从 Git 拉取最新代码，构建项目，优雅重启服务
+# 用法：./deploy.sh [service_name] [branch]
+
+set -euo pipefail            # 严格模式：出错即停(-e)、未定义变量报错(-u)、管道错误检测(-o pipefail)
+
+APP_NAME="${1:-myapp}"       # 第一个参数：服务名称，默认 myapp
+BRANCH="${2:-main}"          # 第二个参数：Git 分支，默认 main
+SRC_DIR="/opt/${APP_NAME}"   # 源代码目录
+BACKUP_DIR="/opt/backup/${APP_NAME}"  # 备份目录
+DATE_TAG=$(date '+%Y%m%d_%H%M%S')
+
+echo "=== 开始部署 $APP_NAME (分支: $BRANCH) ==="
+
+if [ -d "$SRC_DIR" ]; then
+    mkdir -p "$BACKUP_DIR"
+    cp -a "$SRC_DIR" "${BACKUP_DIR}/${APP_NAME}_${DATE_TAG}"  # cp -a 归档模式保留全部属性
+    echo "[1/4] 当前版本已备份"
+fi
+
+if [ ! -d "$SRC_DIR/.git" ]; then
+    git clone -b "$BRANCH" "git@github.com:org/${APP_NAME}.git" "$SRC_DIR"
+else
+    cd "$SRC_DIR" && git checkout "$BRANCH" && git pull --rebase origin "$BRANCH"
+fi
+echo "[2/4] 代码拉取完成"
+
+echo "[3/4] 开始构建..."
+if [ -f "${SRC_DIR}/package.json" ]; then
+    cd "$SRC_DIR" && npm ci --only=production        # Node.js: npm ci 比 install 更快
+elif [ -f "${SRC_DIR}/pom.xml" ]; then
+    cd "$SRC_DIR" && mvn package -DskipTests -q      # Java Maven: -q 安静模式
+elif [ -f "${SRC_DIR}/Makefile" ]; then
+    cd "$SRC_DIR" && make build
+fi
+echo "   构建完成"
+
+echo "[4/4] 重启服务..."
+if command -v systemctl &>/dev/null; then
+    systemctl reload "$APP_NAME" 2>/dev/null || systemctl restart "$APP_NAME"
+    systemctl status "$APP_NAME" --no-pager --lines=5
+else
+    pkill -f "${APP_NAME}" 2>/dev/null || true
+    nohup "${SRC_DIR}/start.sh" > "/var/log/${APP_NAME}.log" 2>&1 &
+fi
+
+echo "=== 部署完成，版本: $(cd "$SRC_DIR" && git rev-parse --short HEAD) ==="</code></pre>
+
+<h4>7. 网络连通性批量诊断脚本 — 快速定位网络问题</h4>
+<pre><code>#!/bin/bash
+# 用途：批量检测目标主机的端口连通性、DNS 解析、HTTP 状态、路由追踪
+
+TARGETS=(
+    "baidu.com:80"
+    "google.com:443"
+    "192.168.1.1:22"
+    "api.example.com:443"
+)
+DNS_SERVERS=("8.8.8.8" "114.114.114.114")
+
+echo "========== 网络诊断报告: $(date) =========="
+
+echo -e "\n>>> 模块1：TCP 端口连通性测试"
+for target in "${TARGETS[@]}"; do
+    host=$(echo "$target" | cut -d: -f1)   # cut -d: -f1 按冒号分割取第一部分（主机）
+    port=$(echo "$target" | cut -d: -f2)   # cut -d: -f2 取第二部分（端口）
+
+    if timeout 5 nc -zv "$host" "$port" >/dev/null 2>&1; then
+        echo "  [ ✓ ] $host:$port — 可达"
+    else
+        echo "  [ ✗ ] $host:$port — 不可达"
+    fi
+done
+
+echo -e "\n>>> 模块2：DNS 解析测试"
+for dns in "${DNS_SERVERS[@]}"; do
+    RESULT=$(dig +short @"$dns" "www.baidu.com" 2>/dev/null | head -1)
+    if [ -n "$RESULT" ]; then
+        echo "  [ ✓ ] DNS $dns — 正常"
+    else
+        echo "  [ ✗ ] DNS $dns — 失败"
+    fi
+done
+
+echo -e "\n>>> 模块3：HTTP 状态检查"
+for url in "https://api.example.com/health" "https://status.example.com"; do
+    HTTP_CODE=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 5 --max-time 10 "$url")
+    echo "  [ $HTTP_CODE ] $url"
+done
+
+echo -e "\n>>> 模块4：路由追踪"
+GATEWAY=$(ip route | grep default | awk '{print $3}')
+if [ -n "$GATEWAY" ]; then
+    traceroute -m 15 -n "$GATEWAY" 2>/dev/null || echo "traceroute 未安装"
+fi
+
+echo -e "\n>>> 模块5：网卡错误统计"
+for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
+    ERRORS=$(ip -s link show "$iface" | grep -A1 "errors" | tail -1 | awk '{print $2}')
+    if [ "$ERRORS" != "0" ] && [ -n "$ERRORS" ]; then
+        echo "  [ ⚠ ] $iface — 错误包数: $ERRORS"
+    fi
+done
+echo -e "\n========== 诊断完成 =========="</code></pre>
+
+<h4>8. 交互式菜单脚本 — 运维工具箱模板</h4>
+<pre><code>#!/bin/bash
+# 用途：提供交互式菜单，将常用运维操作整合到统一界面
+# 用法：直接运行，通过数字选择功能
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"  # 获取脚本所在目录的绝对路径
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; NC='\033[0m'
+print_info()  { echo -e "${BLUE}[INFO]${NC} $1"; }
+print_ok()    { echo -e "${GREEN}[OK]${NC} $1"; }
+print_warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
+print_err()   { echo -e "${RED}[ERROR]${NC} $1"; }
+
+check_deps() { for cmd in "$@"; do command -v "$cmd" &>/dev/null || print_err "缺少: $cmd"; done; }
+
+show_menu() {
+    echo "========== 运维工具箱 - $(hostname) =========="
+    echo " 1. 查看系统资源 (CPU/内存/磁盘)"
+    echo " 2. 查看网络连接和端口"
+    echo " 3. 查看最近登录记录"
+    echo " 4. 查看系统错误日志"
+    echo " 5. 清理临时文件"
+    echo " 6. 检查服务运行状态"
+    echo " 0. 退出"
+    read -p "请输入选择 [0-6]: " choice
+    return "$choice"
+}
+
+while true; do
+    show_menu
+    case $? in
+        1)
+            echo "CPU负载: $(uptime | awk -F'average:' '{print $2}')"
+            free -h | awk '/^Mem:/ {print "内存: "$3"/"$2}'
+            df -h / | awk 'NR==2 {print "磁盘: "$3"/"$2" ("$5")"}'
+            ;;
+        2) ss -tlnp 2>/dev/null || netstat -tlnp ;;
+        3) last -n 10; lastb -n 5 2>/dev/null ;;
+        4) journalctl -p err -n 20 --no-pager 2>/dev/null ;;
+        5)
+            for dir in /tmp /var/tmp; do
+                [ -d "$dir" ] && find "$dir" -atime +2 -type f -delete 2>/dev/null && print_ok "清理 $dir"
+            done
+            ;;
+        6)
+            for svc in nginx mysql docker sshd; do
+                systemctl is-active --quiet "$svc" 2>/dev/null && \
+                    print_ok "$svc: 运行中" || print_warn "$svc: 未运行"
+            done
+            ;;
+        0) echo "再见！"; exit 0 ;;
+        *) print_err "无效输入" ;;
+    esac
+    read -p "按回车返回..." dummy
+done</code></pre>
+
+<p style="margin-top:12px;padding:10px;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent)">
+<strong>脚本使用建议：</strong><br>
+1. 将脚本放在 <code>/opt/scripts/</code> 目录统一管理<br>
+2. 执行 <code>chmod +x /opt/scripts/*.sh</code> 添加执行权限<br>
+3. 配合 crontab 实现定时任务：<code>crontab -e</code> 编辑计划任务<br>
+4. 生产环境脚本建议先执行 <code>bash -n script.sh</code> 检查语法错误<br>
+5. 涉及密码/密钥的脚本使用 <code>chmod 600</code> 限制访问权限
+</p>
+</div></div></div>
+
+<!-- ===== 文本处理 ===== -->
+<h2 class="section-title" id="k-text">&#x1F50D; 文本处理三剑客（grep / sed / awk）</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>grep — 文本搜索</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>grep -i "error" app.log                 # 忽略大小写
+grep -v "debug" app.log                 # 排除
+grep -c "ERROR" app.log                 # 统计匹配行数
+grep -n "error" app.log                 # 显示行号
+grep -r "TODO" ./src/                   # 递归搜索目录
+grep -E "error|fatal|panic" app.log     # -E 扩展正则
+grep -A 3 -B 2 "error" app.log          # 前后行
+# 实用：统计 404 最多的 IP
+grep "404" access.log | awk '{print $1}' | sort | uniq -c | sort -rn | head</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>sed — 流编辑器</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>sed 's/old/new/g' file                 # 全局替换（仅输出）
+sed -i 's/old/new/g' file              # 直接修改文件
+sed -i.bak 's/old/new/g' file          # 修改前备份
+sed -i 's/^#//g' file                  # 去掉行首注释
+sed -i '/^$/d' file                    # 删除空行
+sed -n '5,10p' file                    # 打印 5-10 行
+sed -i '5d' file                       # 删除第 5 行
+# 实用：修改 Nginx 端口
+sed -i 's/listen 80/listen 8080/g' /etc/nginx/nginx.conf</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>awk — 文本分析利器</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code># 结构：awk '条件 {动作}' 文件
+# $0=整行, $1=第1列, $NF=最后一列, NR=行号
+
+awk '{print $1, $3}' access.log            # 按列提取
+awk -F':' '{print $1}' /etc/passwd        # -F 指定分隔符
+awk '$9 == 404' access.log                 # 条件过滤
+awk 'NR>=5 && NR<=10' file                # 第 5-10 行
+awk '{sum+=$1} END {print sum}' data.txt   # 第1列求和
+
+# Nginx 日志分析
+awk '{print $9}' access.log | sort | uniq -c | sort -rn  # 状态码统计
+awk '{ip[$1]++} END {for(i in ip) print i, ip[i]}' access.log | sort -rnk2 | head  # Top IP
+awk '{print $NF}' access.log | sort -n | awk '{all[NR]=$1} END{print all[int(NR*0.99)]}'  # P99</code></pre></div></div></div>
+
+<!-- ===== Docker ===== -->
+<h2 class="section-title" id="k-docker">&#x1F433; Docker 容器</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>Docker 架构 &amp; 核心命令</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>三大核心 + 底层技术</h4>
+<table><tr><th>概念</th><th>说明</th><th>类比</th></tr>
+<tr><td>镜像 Image</td><td>只读模板，含运行环境和代码</td><td>虚拟机 ISO / 类定义</td></tr>
+<tr><td>容器 Container</td><td>镜像的运行实例，独立文件系统/网络/进程</td><td>虚拟机实例 / 对象</td></tr>
+<tr><td>仓库 Registry</td><td>存储和分发镜像</td><td>GitHub / npm</td></tr>
+</table>
+<p>底层：<strong>Namespace</strong>（隔离 PID/NET/MNT/UTS/IPC/User）+ <strong>Cgroups</strong>（限制 CPU/内存/IO）+ <strong>UnionFS</strong>（overlay2 分层文件系统）</p>
+<pre><code>docker run -d --name app --restart=always \
+  -p 8080:8080 -v /data:/data -e ENV=prod \
+  -m 512m --cpus=2 image:tag
+docker exec -it container sh            # 进入容器
+docker logs -f --tail=100 container     # 查看日志
+docker stats --no-stream                # 资源使用
+docker inspect container | jq '.[0].State'
+docker cp container:/path/file ./
+docker history image:tag                # 镜像层历史
+docker system df && docker system prune -af  # 清理</code></pre>
+
+<h4>Dockerfile 最佳实践</h4>
+<pre><code>FROM golang:1.21-alpine AS builder
+WORKDIR /app
+COPY go.mod go.sum ./ && RUN go mod download   # 先复制依赖，利用缓存
+COPY . .
+RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o app .
+
+FROM alpine:3.19
+RUN apk add --no-cache ca-certificates tzdata curl
+RUN adduser -D -u 1000 appuser
+USER appuser                                   # 非 root 运行
+COPY --from=builder /app/app /app
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+ENTRYPOINT ["/app"]</code></pre>
+
+<h4>Docker 网络模式</h4>
+<table><tr><th>模式</th><th>特点</th><th>适用</th></tr>
+<tr><td>bridge</td><td>连虚拟网桥 docker0，NAT 出外网</td><td>单机多容器</td></tr>
+<tr><td>host</td><td>与宿主机共享网络栈，性能最好</td><td>高性能场景</td></tr>
+<tr><td>none</td><td>无网络，完全隔离</td><td>安全要求极高</td></tr>
+<tr><td>overlay</td><td>跨主机 VXLAN 隧道</td><td>Swarm / K8s</td></tr>
+</table></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>Docker Compose 编排</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>services:
+  app:
+    build: .
+    image: registry.example.com/app:${TAG:-latest}
+    ports: ["8080:8080"]
+    environment: [DB_HOST=db, REDIS_HOST=redis]
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+    deploy:
+      resources:
+        limits: {cpus: '2', memory: 512M}
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+  db:
+    image: mysql:8.0
+    volumes: ["db_data:/var/lib/mysql"]
+    environment: {MYSQL_ROOT_PASSWORD: secret, MYSQL_DATABASE: app}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+volumes:
+  db_data:</code></pre></div></div></div>
+
+<!-- ===== K8s ===== -->
+<h2 class="section-title" id="k-k8s">&#x2638; Kubernetes</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>K8s 架构 &amp; 核心资源详解</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>控制平面组件</h4>
+<table><tr><th>组件</th><th>职责</th></tr>
+<tr><td>kube-apiserver</td><td>集群统一入口，所有操作都通过它</td></tr>
+<tr><td>etcd</td><td>分布式 KV 存储，存所有集群状态（最重要！定期备份）</td></tr>
+<tr><td>kube-scheduler</td><td>调度器，决定 Pod 放在哪个节点</td></tr>
+<tr><td>kube-controller-manager</td><td>控制器集合，维持期望状态（Deployment/ReplicaSet 等）</td></tr>
+</table>
+
+<h4>核心资源速查</h4>
+<table><tr><th>资源</th><th>作用</th><th>关键字段</th></tr>
+<tr><td>Pod</td><td>最小调度单元</td><td>containers, volumes</td></tr>
+<tr><td>Deployment</td><td>无状态应用管理</td><td>replicas, strategy, selector</td></tr>
+<tr><td>StatefulSet</td><td>有状态应用</td><td>serviceName, volumeClaimTemplates</td></tr>
+<tr><td>Service</td><td>服务发现 &amp; 负载均衡</td><td>type(ClusterIP/NodePort/LB), selector</td></tr>
+<tr><td>Ingress</td><td>七层路由</td><td>rules, tls, ingressClassName</td></tr>
+<tr><td>ConfigMap/Secret</td><td>配置管理</td><td>data, immutable</td></tr>
+<tr><td>HPA</td><td>水平自动扩缩</td><td>minReplicas, maxReplicas, metrics</td></tr>
+<tr><td>PVC</td><td>持久化存储</td><td>storageClassName, resources.requests.storage</td></tr>
+</table>
+
+<h4>完整 Deployment YAML 示例</h4>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata: {name: app-backend, labels: {app: backend}}
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: {maxSurge: 1, maxUnavailable: 0}
+  selector: {matchLabels: {app: backend}}
+  template:
+    metadata: {labels: {app: backend, version: v1}}
+    spec:
+      containers:
+      - name: app
+        image: registry.example.com/app:v1.2.3
+        ports: [{containerPort: 8080}]
+        env:
+        - name: DB_HOST
+          valueFrom: {secretKeyRef: {name: app-secret, key: db_host}}
+        resources:
+          requests: {cpu: "250m", memory: "256Mi"}
+          limits: {cpu: "1000m", memory: "512Mi"}
+        livenessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet: {path: /ready, port: 8080}
+          initialDelaySeconds: 5
+          periodSeconds: 5</code></pre>
+
+<h4>常用诊断命令</h4>
+<pre><code>kubectl get nodes -o wide && kubectl describe node NODE
+kubectl top nodes && kubectl top pods       # 需要 metrics-server
+kubectl get events --sort-by='.lastTimestamp' -A
+kubectl logs -f POD -c CONTAINER --tail=100 --previous
+kubectl exec -it POD -- /bin/sh
+kubectl describe pod POD                    # Events 最重要！
+kubectl debug -it POD --image=busybox --target=CONTAINER
+kubectl port-forward pod/POD 8080:8080
+
+# Pod 排错 Checklist：
+# describe pod → Events → ImagePullBackOff? CrashLoopBackOff? Pending?</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>Service / Ingress / RBAC 详解</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>Service 类型对比</h4>
+<table><tr><th>类型</th><th>访问范围</th><th>场景</th></tr>
+<tr><td>ClusterIP</td><td>集群内</td><td>内部服务间调用（默认）</td></tr>
+<tr><td>NodePort</td><td>NodeIP:30000-32767</td><td>测试用，生产不推荐</td></tr>
+<tr><td>LoadBalancer</td><td>公网/内网 LB</td><td>生产对外服务</td></tr>
+</table>
+<pre><code># Ingress 示例
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: {name: app-ingress}
+spec:
+  ingressClassName: nginx
+  tls: [{hosts: [api.example.com], secretName: tls-secret}]
+  rules:
+  - host: api.example.com
+    http:
+      paths:
+      - {path: /api, pathType: Prefix, backend: {service: {name: backend-svc, port: {number: 8080}}}}</code></pre></div></div></div>
+
+<!-- ===== 网络 ===== -->
+<h2 class="section-title" id="k-network">&#x1F310; 网络协议核心知识</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>TCP/IP &amp; 抓包分析</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>TCP 三次握手 / 四次挥手</h4>
+<pre><code># 三次握手（建立连接）
+Client → Server: SYN (seq=x)
+Server → Client: SYN+ACK (seq=y, ack=x+1)
+Client → Server: ACK (ack=y+1)
+
+# 四次挥手（断开连接）
+Client → Server: FIN
+Server → Client: ACK
+Server → Client: FIN
+Client → Server: ACK → TIME_WAIT (等 2MSL ≈ 60s)</code></pre>
+<h4>tcpdump 抓包实用命令</h4>
+<pre><code>tcpdump -i eth0 -nn port 80                     # 抓 80 端口
+tcpdump -i eth0 host 10.0.1.5                   # 指定主机
+tcpdump -i eth0 -nn -w capture.pcap              # 写入文件 (用 Wireshark 分析)
+tcpdump -i eth0 -nn 'tcp[tcpflags] & tcp-rst != 0'  # 只抓 RST
+tcpdump -r capture.pcap -nn | head               # 分析 pcap 文件</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>DNS &amp; SSL/TLS 证书</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code># DNS 排查
+dig example.com && dig +short example.com
+dig +trace example.com                  # 追踪完整解析过程
+dig -x 8.8.8.8                          # 反向解析
+
+# 证书查看
+openssl x509 -in cert.crt -text -noout   # 证书详情
+openssl x509 -in cert.crt -dates -noout  # 有效期
+openssl s_client -connect example.com:443 -servername example.com  # 远程证书链
+
+# Let's Encrypt (certbot)
+certbot --nginx -d example.com           # 自动配置
+certbot renew --dry-run                  # 测试续期
+# 务必设置 cron: 0 3 * * * certbot renew --quiet --post-hook "nginx -s reload"</code></pre></div></div></div>
+
+<div class="collapsible"><div class="collapsible-header"><span>Linux 内核网络参数调优</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>sysctl net.ipv4.tcp_tw_reuse             # 查看
+sysctl -w net.ipv4.tcp_tw_reuse=1        # 临时修改
+sysctl -p                                 # 从 /etc/sysctl.conf 加载
+
+# 常用调优
+net.core.somaxconn = 4096                # listen 队列
+net.ipv4.tcp_tw_reuse = 1                # 复用 TIME_WAIT
+net.ipv4.tcp_max_syn_backlog = 8192      # SYN 队列
+net.ipv4.ip_local_port_range = 10000 65000  # 本地端口范围
+vm.swappiness = 1                        # 尽量不用 swap（数据库必须！）
+vm.overcommit_memory = 1                 # Redis 必须
+fs.file-max = 6553560                    # 全局 fd 上限</code></pre></div></div></div>
+
+<!-- ===== Nginx ===== -->
+<h2 class="section-title" id="k-nginx">&#x1F500; Nginx 深度配置</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>反向代理/负载均衡/限流</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>upstream 负载均衡算法</h4>
+<table><tr><th>算法</th><th>指令</th><th>场景</th></tr>
+<tr><td>轮询（默认）</td><td>—</td><td>后端性能一致</td></tr>
+<tr><td>加权轮询</td><td>weight=N</td><td>后端性能不一</td></tr>
+<tr><td>最少连接</td><td>least_conn</td><td>长连接场景</td></tr>
+<tr><td>IP Hash</td><td>ip_hash</td><td>需要会话保持</td></tr>
+</table>
+<pre><code>upstream backend {
+    least_conn;
+    server 10.0.1.1:8080 weight=3 max_fails=3 fail_timeout=30s;
+    server 10.0.1.2:8080 weight=1;
+    server 10.0.1.3:8080 backup;      # 其他都挂了才用
+    keepalive 32;
+}
+
+limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
+
+server {
+    listen 443 ssl http2;
+    ssl_certificate /etc/nginx/certs/server.crt;
+    ssl_certificate_key /etc/nginx/certs/server.key;
+
+    gzip on; gzip_types text/plain application/json;
+
+    location /api/ {
+        limit_req zone=mylimit burst=20 nodelay;
+        proxy_pass http://backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_read_timeout 60s;
+    }
+}</code></pre></div></div></div>
+
+<!-- ===== MySQL ===== -->
+<h2 class="section-title" id="k-mysql">&#x1F5C4; MySQL 基础运维</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>日常运维 &amp; SQL 优化</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>SHOW PROCESSLIST;                       # 当前连接
+SHOW STATUS LIKE 'Threads_connected';   # 当前连接数
+SHOW VARIABLES LIKE 'max_connections';  # 最大连接数
+
+# 慢查询
+SHOW VARIABLES LIKE 'slow_query%';
+SELECT * FROM mysql.slow_log ORDER BY query_time DESC LIMIT 10;
+
+# EXPLAIN 分析（关键！）
+EXPLAIN SELECT * FROM orders WHERE user_id = 123;
+# 关注 type：ALL(最差)→index→range→ref→const(最好)，rows，Extra
+
+# 索引
+SHOW INDEX FROM table_name;
+CREATE INDEX idx_user_status ON orders(user_id, status);
+# 联合索引最左前缀原则：idx(a,b,c) 支持 a / a,b / a,b,c 查询
+
+# 备份恢复
+mysqldump -u root -p --single-transaction --routines --triggers db > backup.sql
+mysql -u root -p db < backup.sql</code></pre></div></div></div>
+
+<!-- ===== Redis ===== -->
+<h2 class="section-title" id="k-redis">&#x26A1; Redis 基础运维</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>核心知识 &amp; 运维命令</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>数据类型与使用场景</h4>
+<table><tr><th>类型</th><th>场景</th></tr>
+<tr><td>String</td><td>缓存、计数器、分布式锁</td></tr>
+<tr><td>Hash</td><td>对象存储（用户信息）</td></tr>
+<tr><td>List</td><td>消息队列、时间线</td></tr>
+<tr><td>Set</td><td>标签、共同好友</td></tr>
+<tr><td>Sorted Set</td><td>排行榜、延迟队列</td></tr>
+</table>
+<pre><code>redis-cli INFO                            # 服务器全信息
+redis-cli INFO memory                     # 只看内存
+redis-cli --stat                          # 实时统计 (类似 vmstat)
+redis-cli --bigkeys                       # 找大 key（慎用，会阻塞！）
+redis-cli --scan --pattern 'user:*' | head  # 扫描 key
+redis-cli CONFIG GET maxmemory            # 内存上限
+redis-cli CONFIG GET maxmemory-policy     # 淘汰策略：volatile-lru/allkeys-lru</code></pre></div></div></div>
+
+<!-- ===== 监控 ===== -->
+<h2 class="section-title" id="k-monitor">&#x1F4CA; 监控 &amp; 可观测性</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>Prometheus + Grafana 体系</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code># 常用 PromQL
+rate(http_requests_total[5m])                                         # QPS
+rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m])  # 错误率
+histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))      # P99
+sum(rate(container_cpu_usage_seconds_total[5m])) by (pod)                    # Pod CPU
+node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100           # 可用内存%
+predict_linear(node_filesystem_free_bytes[1h], 4*3600)                      # 预测磁盘满
+
+# 常用 Grafana Dashboard: 1860 (Node), 315 (K8s), 7362 (MySQL), 11835 (Redis)</code></pre>
+
+<h4>告警规则示例</h4>
+<pre><code>- alert: HighErrorRate
+  expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+  for: 5m
+  labels: {severity: critical}
+  annotations: {summary: "错误率超过5%", description: "{{ $value | humanizePercentage }}"}
+
+- alert: DiskWillFillIn4Hours
+  expr: predict_linear(node_filesystem_free_bytes[1h], 4*3600) < 0
+  labels: {severity: warning}
+  annotations: {summary: "磁盘预计4小时后满"}</code></pre></div></div></div>
+
+<!-- ===== CI/CD ===== -->
+<h2 class="section-title" id="k-cicd">&#x1F504; CI/CD 流水线</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>GitLab CI / 部署策略</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<pre><code>stages: [build, test, security, deploy-staging, smoke, deploy-prod]
+
+variables:
+  IMAGE: registry.example.com/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA
+
+build:
+  stage: build
+  script:
+    - docker build --cache-from $IMAGE:latest -t $IMAGE .
+    - docker push $IMAGE
+
+unit-test:
+  stage: test
+  script: [docker run --rm $IMAGE npm test -- --coverage]
+  artifacts: {reports: {junit: report.xml}}
+
+security-scan:
+  stage: security
+  script: [trivy image --severity HIGH,CRITICAL $IMAGE]
+  allow_failure: true
+
+deploy-staging:
+  stage: deploy-staging
+  script:
+    - kubectl set image deployment/app-staging app=$IMAGE -n staging
+    - kubectl rollout status deployment/app-staging -n staging
+
+deploy-prod:
+  stage: deploy-prod
+  script:
+    - kubectl set image deployment/app app=$IMAGE -n production
+  when: manual</code></pre>
+
+<h4>三种部署策略对比</h4>
+<table><tr><th>策略</th><th>原理</th><th>优点</th><th>缺点</th></tr>
+<tr><td>滚动更新</td><td>逐台替换</td><td>资源省</td><td>回滚慢</td></tr>
+<tr><td>蓝绿部署</td><td>两套环境切流量</td><td>回滚快</td><td>资源翻倍</td></tr>
+<tr><td>金丝雀发布</td><td>小比例流量验证</td><td>最安全</td><td>实现复杂</td></tr>
+</table></div></div></div>
+
+<!-- ===== 安全 ===== -->
+<h2 class="section-title" id="k-security">&#x1F512; 安全运维 &amp; 入侵排查</h2>
+
+<div class="collapsible"><div class="collapsible-header"><span>安全基线 &amp; 应急响应</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>安全基线检查</h4>
+<table><tr><th>类别</th><th>检查项</th></tr>
+<tr><td>SSH</td><td>禁用 root 登录、密钥认证、修改默认端口、fail2ban</td></tr>
+<tr><td>防火墙</td><td>最小化开放端口、默认 DROP 策略</td></tr>
+<tr><td>系统</td><td>定期更新补丁、SELinux/AppArmor、auditd 审计</td></tr>
+<tr><td>容器</td><td>非 root 运行、只读根文件系统、镜像扫描 (Trivy)</td></tr>
+<tr><td>K8s</td><td>RBAC 最小权限、NetworkPolicy、PodSecurity</td></tr>
+<tr><td>密钥</td><td>不用明文密码、使用 Vault/SealedSecret</td></tr>
+</table>
+
+<h4>入侵排查快速步骤</h4>
+<pre><code>lastb | head -20                          # 登录失败记录
+grep "Failed password" /var/log/auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -rn
+awk -F: '($3==0){print $1}' /etc/passwd  # uid=0 用户（应该只有 root）
+ps auxf                                    # 进程树，有没有可疑进程
+ss -tunap                                  # 所有网络连接
+crontab -l; cat /etc/crontab              # 定时任务是否有后门
+cat ~/.ssh/authorized_keys                # 检查不明公钥
+find / -perm -4000 2>/dev/null            # 查找 SUID 文件</code></pre></div></div></div>
+
+</section>
+<!-- ===== 实操演练 ===== -->
+<section id="tab-practice" class="hidden">
+
+<h2 class="section-title" style="margin-top:0">&#x1F4BB; 交互式实操演练</h2>
+
+<div class="card">
+<h3>&#x1F5A5; Linux 命令终端模拟器</h3>
+<p style="margin-bottom:12px">模拟终端，帮助你熟悉常用运维命令。选择预设命令或手动输入指令查看模拟输出。</p>
+<div class="terminal-toolbar">
+<button onclick="runSimCmd('top -bn1 | head -5')">top</button>
+<button onclick="runSimCmd('free -h')">free -h</button>
+<button onclick="runSimCmd('df -h')">df -h</button>
+<button onclick="runSimCmd('ss -tlnp')">ss -tlnp</button>
+<button onclick="runSimCmd('ps aux --sort=-%mem | head -5')">ps aux</button>
+<button onclick="runSimCmd('cat /proc/loadavg')">loadavg</button>
+<button onclick="runSimCmd('iostat -x 1 1')">iostat</button>
+<button onclick="runSimCmd('docker ps')">docker ps</button>
+<button onclick="runSimCmd('kubectl get pods')">kubectl get pods</button>
+<button onclick="runSimCmd('uptime')">uptime</button>
+</div>
+<div class="terminal" id="terminal" style="max-height:500px">
+<div class="output" id="termOutput">
+<span class="blue">[模拟终端] 运维工具箱 - 点击上方快捷命令或手动输入 Linux 命令</span>
+<span class="yellow">支持命令:</span> top, free, df, ss, ps, iostat, vmstat, uptime, netstat, kill, lsof, du, find, grep, journalctl, docker ps, kubectl get pods 等
+<span style="color:#64748b">────────────────────────────────────────</span>
+</div>
+<div class="prompt-line"><span class="prompt">root@server:~#</span><input type="text" id="termInput" placeholder="输入命令..." autocomplete="off"></div>
+</div></div>
+
+<h2 class="section-title">&#x1F3AE; 场景模拟演练</h2>
+<div class="grid-2">
+<div class="card"><h3>场景 1：CPU 100% 排查</h3><p>某 Java 应用 CPU 飙到 100%，你需要：</p><ol style="padding-left:20px;margin:8px 0"><li>找到高 CPU 的进程 PID（top -c）</li><li>定位到具体线程（top -Hp PID）</li><li>分析线程堆栈找到问题代码（jstack/arthas）</li></ol><p style="font-size:.8rem;color:var(--text-secondary)">提示：top -Hp, printf %x, jstack</p></div>
+<div class="card"><h3>场景 2：磁盘空间满</h3><p>数据库写入报错 "No space left on device"：</p><ol style="padding-left:20px;margin:8px 0"><li>确认分区使用情况（df -h）</li><li>找到最大目录（du -sh /*）</li><li>处理或清理文件（lsof | grep deleted 查未释放文件）</li></ol></div>
+<div class="card"><h3>场景 3：服务频繁重启（OOMKilled）</h3><p>K8s Pod 状态 OOMKilled，每隔一段时间重启：</p><ol style="padding-left:20px;margin:8px 0"><li>kubectl describe pod 查看 events</li><li>检查容器内存 limits 是否合理</li><li>排查内存泄漏（jmap/pprof）或调大 limits</li></ol></div>
+<div class="card"><h3>场景 4：502 Bad Gateway</h3><p>Nginx 反向代理报 502：</p><ol style="padding-left:20px;margin:8px 0"><li>检查后端是否存活（ss/netstat）</li><li>查看 Nginx error log</li><li>检查上游连接超时和 keepalive 设置</li></ol></div>
+<div class="card"><h3>场景 5：K8s Pod 起不来</h3><p>新部署的应用 Pod 一直 CrashLoopBackOff：</p><ol style="padding-left:20px;margin:8px 0"><li>kubectl logs POD --previous 看上次日志</li><li>kubectl describe pod 看 events</li><li>检查健康检查端点是否正确</li><li>进入容器手动启动排查</li></ol></div>
+<div class="card"><h3>场景 6：MySQL 连接数暴涨</h3><p>突然出现 "Too many connections"：</p><ol style="padding-left:20px;margin:8px 0"><li>SHOW PROCESSLIST 看连接来源</li><li>检查是否有大事务/Sleep 堆积</li><li>临时调大 max_connections 止血</li><li>排查应用连接池泄漏</li></ol></div>
+</div>
+
+<h2 class="section-title">&#x1F9EA; 故障诊断小测验</h2>
+<div id="practiceQuiz" class="card">
+<div id="pqQuestion"></div><div id="pqOptions"></div>
+<div id="pqResult" style="margin-top:12px"></div>
+<button class="quiz-btn" id="pqSubmit" onclick="submitPracticeQuiz()" style="margin-top:8px">提交答案</button>
+<button class="quiz-btn" id="pqNext" onclick="nextPracticeQuiz()" style="margin-top:8px;display:none;margin-left:8px">下一题 &#x2192;</button>
+</div>
+</section>
+
+<!-- ===== 项目学习 ===== -->
+<section id="tab-project" class="hidden">
+
+<h2 class="section-title" style="margin-top:0">&#x1F680; 实战项目学习路线</h2>
+<div class="stats-row"><div class="stat-card"><div class="num">8</div><div class="label">完整项目</div></div><div class="stat-card"><div class="num">&#x1F4D6;</div><div class="label">从零到上线</div></div><div class="stat-card"><div class="num">&#x1F527;</div><div class="label">真实演练</div></div></div>
+
+<!-- 项目1 -->
+<div class="collapsible open"><div class="collapsible-header"><span>&#x1F3D7; 项目一：搭建完整监控体系（Prometheus + Grafana + AlertManager）</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>学习目标</h4>
+<ul style="padding-left:20px;margin:8px 0"><li>理解时序数据库和 Pull 模型 vs Push 模型</li><li>掌握 PromQL 查询语言（rate / histogram_quantile / predict_linear）</li><li>配置分组+抑制+静默的告警体系</li><li>用 Grafana 创建可视化面板和变量过滤</li></ul>
+<h4>架构</h4>
+<pre><code>[Node Exporter 每台主机] ─┐
+[App /metrics 端点]      ─┤─→ [Prometheus] ─→ [Grafana 可视化]
+[Mysql Exporter]         ─┤       │
+[Redis Exporter]         ─┘       └→ [AlertManager] ─→ [钉钉/飞书/企微]</code></pre>
+
+<h4>详细步骤（初学者可跟着做）</h4>
+<div class="highlight-box"><strong>前置条件：</strong>一台 Linux 服务器（2C4G+），已安装 Docker 和 Docker Compose</div>
+
+<p><strong>第 1 步：创建项目目录和配置文件</strong></p>
+<pre><code>mkdir -p /opt/monitoring && cd /opt/monitoring
+mkdir prometheus alertmanager grafana</code></pre>
+
+<p><strong>第 2 步：编写 Prometheus 配置</strong> — <code>prometheus/prometheus.yml</code></p>
+<pre><code>global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+  - static_configs: [{targets: ['alertmanager:9093']}]
+
+rule_files: ['/etc/prometheus/rules/*.yml']
+
+scrape_configs:
+- job_name: 'node'
+  static_configs:
+  - targets: ['node-exporter:9100']
+
+- job_name: 'prometheus'
+  static_configs: [{targets: ['localhost:9090']}]</code></pre>
+
+<p><strong>第 3 步：编写告警规则</strong> — <code>prometheus/rules/alerts.yml</code></p>
+<pre><code>groups:
+- name: node_alerts
+  rules:
+  - alert: HighCPUUsage
+    expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+    for: 5m
+    labels: {severity: warning}
+    annotations: {summary: "CPU 使用率 > 80%", description: "{{ $labels.instance }}: {{ $value }}%"}
+
+  - alert: HighMemoryUsage
+    expr: (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 > 90
+    for: 5m
+    labels: {severity: warning}
+
+  - alert: DiskSpaceLow
+    expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 10
+    for: 5m
+    labels: {severity: critical}</code></pre>
+
+<p><strong>第 4 步：编写 AlertManager 配置</strong> — <code>alertmanager/alertmanager.yml</code></p>
+<pre><code>route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 4h
+  receiver: 'webhook'
+
+receivers:
+- name: 'webhook'
+  webhook_configs:
+  - url: 'https://your-webhook-url'  # 替换为钉钉/飞书 webhook
+    send_resolved: true</code></pre>
+
+<p><strong>第 5 步：编写 Docker Compose</strong> — <code>docker-compose.yml</code></p>
+<pre><code>services:
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/rules:/etc/prometheus/rules
+      - prometheus_data:/prometheus
+    command: ['--storage.tsdb.retention.time=15d']
+    ports: ['9090:9090']
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter:v1.6.0
+    volumes: ['/proc:/host/proc:ro', '/sys:/host/sys:ro', '/:/rootfs:ro']
+    command: ['--path.procfs=/host/proc', '--path.sysfs=/host/sys']
+    ports: ['9100:9100']
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.0.0
+    volumes: ['grafana_data:/var/lib/grafana']
+    environment: [GF_SECURITY_ADMIN_PASSWORD=admin]
+    ports: ['3000:3000']
+    restart: unless-stopped
+    depends_on: [prometheus]
+
+  alertmanager:
+    image: prom/alertmanager:v0.25.0
+    volumes: ['./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml']
+    ports: ['9093:9093']
+    restart: unless-stopped
+
+volumes:
+  prometheus_data: {}; grafana_data: {}</code></pre>
+
+<p><strong>第 6 步：启动并验证</strong></p>
+<pre><code>docker compose up -d
+docker compose ps                  # 确认 4 个服务都 running
+curl http://localhost:9090/-/healthy  # Prometheus
+curl http://localhost:3000/api/health # Grafana</code></pre>
+
+<p><strong>第 7 步：在 Grafana 中配置</strong></p>
+<ol style="padding-left:20px;margin:8px 0">
+<li>访问 http://服务器IP:3000，默认 admin/admin</li>
+<li>Configuration &#x2192; Data Sources &#x2192; Add Prometheus (URL: http://prometheus:9090)</li>
+<li>Dashboard &#x2192; Import &#x2192; 输入 <strong>1860</strong> (Node Exporter Full) &#x2192; 选择数据源</li>
+<li>观察 CPU/内存/磁盘/网络图表是否正常</li>
+</ol>
+
+<p><strong>第 8 步：给应用添加指标暴露</strong></p>
+<pre><code># Java (Spring Boot + Micrometer)
+management.endpoints.web.exposure.include=prometheus,health,metrics
+# 访问 http://your-app:8080/actuator/prometheus
+
+# Go (prometheus client)
+import "github.com/prometheus/client_golang/prometheus/promhttp"
+http.Handle("/metrics", promhttp.Handler())</code></pre>
+
+<div class="highlight-box success"><strong>&#x2705; 产出：</strong>一套可用的监控系统，含主机监控、告警规则、可视化面板。后续可添加 MySQL Exporter、Redis Exporter、Blackbox Exporter 等。</div>
+</div></div></div>
+
+<!-- 项目2 -->
+<div class="collapsible"><div class="collapsible-header"><span>&#x1F433; 项目二：Docker 化 + CI/CD 自动化部署流水线</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>学习目标</h4>
+<ul style="padding-left:20px;margin:8px 0"><li>编写多阶段 Dockerfile 减小镜像体积</li><li>配置 GitLab CI 实现自动构建/测试/部署</li><li>理解蓝绿部署和滚动更新策略</li><li>集成安全扫描 (Trivy/SonarQube)</li></ul>
+
+<h4>流水线架构</h4>
+<pre><code>Git Push ─→ GitLab CI:
+  Stage 1: Build & Unit Test (并行执行)
+  Stage 2: SAST 安全扫描 (Trivy + SonarQube)
+  Stage 3: Build Docker Image → Push to Harbor 镜像仓库
+  Stage 4: Deploy to Staging (kubectl set image)
+  Stage 5: Smoke Test (newman/postman)
+  Stage 6: Deploy to Production (manual approve)</code></pre>
+
+<h4>详细步骤</h4>
+<p><strong>第 1 步：准备一个示例应用</strong></p>
+<pre><code># 用任意语言写一个简单的 HTTP 服务，有 /health 和 / 端点
+# 例如 Node.js Express / Python Flask / Go net/http</code></pre>
+
+<p><strong>第 2 步：编写 Dockerfile</strong>（见运维知识 &#x2192; Docker 章节）</p>
+
+<p><strong>第 3 步：编写 .gitlab-ci.yml</strong></p>
+<pre><code>stages: [build, test, scan, docker, deploy]
+
+variables:
+  IMAGE: harbor.example.com/myapp:$CI_COMMIT_SHORT_SHA
+
+build:
+  stage: build
+  script: [npm ci, npm run build]
+  cache: {key: $CI_COMMIT_REF_SLUG, paths: [node_modules/]}
+
+test:
+  stage: test
+  script: [npm test -- --coverage]
+  artifacts: {reports: {junit: junit.xml}}
+
+scan:
+  stage: scan
+  script: [trivy fs --severity HIGH,CRITICAL .]
+
+docker:
+  stage: docker
+  script:
+    - docker build -t $IMAGE .
+    - echo "$HARBOR_PASS" | docker login harbor.example.com -u robot --password-stdin
+    - docker push $IMAGE
+
+deploy:
+  stage: deploy
+  script:
+    - kubectl set image deployment/myapp myapp=$IMAGE
+    - kubectl rollout status deployment/myapp
+  only: [main]</code></pre>
+
+<p><strong>第 4 步：配置 GitLab Runner</strong></p>
+<pre><code># 在服务器上安装 GitLab Runner
+curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | bash
+apt install gitlab-runner
+gitlab-runner register  # 输入 GitLab URL 和 token
+# Executor 选 docker，image 选 docker:latest</code></pre>
+
+<p><strong>第 5 步：推代码触发流水线</strong></p>
+<pre><code>git add . && git commit -m "feat: add CI/CD pipeline"
+git push origin main
+# 在 GitLab → CI/CD → Pipelines 查看流水线执行情况</code></pre>
+
+<div class="highlight-box success"><strong>&#x2705; 产出：</strong>每次 git push 自动触发构建→测试→扫描→镜像打包→部署，实现完整的 CI/CD 自动化。</div>
+</div></div></div>
+
+<!-- 项目3 -->
+<div class="collapsible"><div class="collapsible-header"><span>&#x2638; 项目三：K8s 集群搭建 &amp; 应用部署实战</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>学习目标</h4>
+<ul style="padding-left:20px;margin:8px 0"><li>用 kubeadm 搭建 3 节点 K8s 集群（1 Master + 2 Worker）</li><li>部署 CNI (Calico)、Ingress Controller (Nginx)、Metrics Server</li><li>部署有状态和无状态应用，理解 Service 和 Ingress</li></ul>
+
+<h4>详细步骤</h4>
+<p><strong>第 1 步：准备 3 台机器（虚拟机即可）</strong></p>
+<pre><code># 每台机器执行：关闭 swap、配置内核参数
+swapoff -a && sed -i '/swap/d' /etc/fstab
+cat << EOF > /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+modprobe br_netfilter
+cat << EOF > /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sysctl --system
+
+# 安装 containerd + kubeadm/kubelet/kubectl
+apt update && apt install -y containerd
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
+apt update && apt install -y kubeadm kubelet kubectl
+apt-mark hold kubeadm kubelet kubectl</code></pre>
+
+<p><strong>第 2 步：初始化 Master 节点</strong></p>
+<pre><code>kubeadm init --pod-network-cidr=10.244.0.0/16
+mkdir -p $HOME/.kube && cp /etc/kubernetes/admin.conf $HOME/.kube/config
+kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml</code></pre>
+
+<p><strong>第 3 步：加入 Worker 节点</strong>（使用 init 输出的 join 命令）</p>
+<pre><code>kubeadm join 192.168.1.10:6443 --token TOKEN --discovery-token-ca-cert-hash sha256:HASH</code></pre>
+
+<p><strong>第 4 步：安装 Ingress 和 Metrics Server</strong></p>
+<pre><code>kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl get nodes  # 确认所有节点 Ready</code></pre>
+
+<p><strong>第 5 步：部署一个完整应用</strong></p>
+<pre><code># deployment.yaml + service.yaml + ingress.yaml
+# 部署后验证
+kubectl port-forward svc/myapp-svc 8080:80
+curl http://localhost:8080/health</code></pre>
+
+<div class="highlight-box success"><strong>&#x2705; 产出：</strong>一个可用的 3 节点 K8s 集群，具备网络、Ingress、Metrics Server，可以部署自己的应用。</div>
+</div></div></div>
+
+<!-- 项目4 -->
+<div class="collapsible"><div class="collapsible-header"><span>&#x1F4CB; 项目四：日志收集系统（Loki + Promtail + Grafana）</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>为什么选 Loki 而不是 ELK？</h4>
+<table><tr><th>方案</th><th>优势</th><th>劣势</th><th>适用</th></tr>
+<tr><td>Loki</td><td>轻量、与 Grafana 统一、按 label 索引</td><td>全文搜索弱</td><td>K8s 环境首选</td></tr>
+<tr><td>ELK/EFK</td><td>搜索强大、生态成熟</td><td>资源消耗大</td><td>大规模日志分析</td></tr>
+</table>
+
+<h4>Loki 架构</h4>
+<pre><code>[各 Pod 日志] ─→ [Promtail DaemonSet] ─→ [Loki] ─→ [Grafana 统一查看]
+                     ↑ 自动添加 K8s 元数据 (namespace/pod/container/labels)</code></pre>
+
+<h4>部署步骤</h4>
+<pre><code># 1. 用 Helm 安装 Loki
+helm repo add grafana https://grafana.github.io/helm-charts
+helm upgrade --install loki grafana/loki-stack \
+  --set promtail.enabled=true \
+  --set grafana.enabled=false  # 如果已有 Grafana
+
+# 2. 在 Grafana 中添加 Loki 数据源 (URL: http://loki:3100)
+
+# 3. 在 Grafana Explore 中查询日志
+# LogQL 示例：
+{namespace="production", app="backend"} |= "error"  # 包含 error 的日志
+{app="backend"} | json | status >= 400              # 解析 JSON 日志</code></pre>
+</div></div></div>
+
+<!-- 项目5 -->
+<div class="collapsible"><div class="collapsible-header"><span>&#x1F500; 项目五：Nginx 高性能负载均衡 &amp; 网关实战</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>学习要点</h4>
+<ul style="padding-left:20px;margin:8px 0"><li>反向代理/负载均衡/限流/缓存四大能力</li><li>upstream 配置：轮询/加权/least_conn/ip_hash/backup</li><li>限流：limit_req（速率）+ limit_conn（并发）</li><li>SSL 终结 + HTTP/2 + Gzip</li><li>健康检查 + 故障转移 + 长连接</li></ul>
+
+<h4>实战：用 Docker Compose 搭建 Nginx + 2 个后端</h4>
+<pre><code>services:
+  nginx:
+    image: nginx:1.25-alpine
+    ports: ["80:80"]
+    volumes: ["./nginx.conf:/etc/nginx/nginx.conf:ro"]
+
+  backend1:
+    image: nginx:alpine  # 模拟后端，返回不同内容
+    volumes: ["./app1/index.html:/usr/share/nginx/html/index.html"]
+
+  backend2:
+    image: nginx:alpine
+    volumes: ["./app2/index.html:/usr/share/nginx/html/index.html"]</code></pre>
+<p>配置完成后用 <code>docker compose up -d</code> 启动，然后访问多次验证负载均衡效果。</p>
+</div></div></div>
+
+<!-- 项目6 -->
+<div class="collapsible"><div class="collapsible-header"><span>&#x1F527; 项目六：Ansible 自动化运维</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>学习目标：批量管理 10+ 台服务器</h4>
+<pre><code># inventory.ini
+[webservers]
+web-01 ansible_host=10.0.1.1
+web-02 ansible_host=10.0.1.2
+
+[dbservers]
+db-01 ansible_host=10.0.2.1
+
+# playbook.yml
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Install nginx
+      apt: name=nginx state=latest
+    - name: Deploy config
+      template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+      notify: restart nginx
+    - name: Ensure nginx running
+      service: name=nginx state=started enabled=yes
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+
+# 执行: ansible-playbook -i inventory.ini playbook.yml</code></pre>
+</div></div></div>
+
+<!-- 项目7 -->
+<div class="collapsible"><div class="collapsible-header"><span>&#x26A1; 项目七：Redis 集群搭建（三主三从）</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>为什么需要 Redis 集群？</h4>
+<p>解决单机 Redis 的内存上限和单点故障问题。集群通过分片（16384 个 hash slot）将数据分散到多个节点。</p>
+<pre><code># 用 Docker Compose 快速搭建 6 节点集群
+# 需要 6 个 Redis 实例（3 主 + 3 从）
+
+# 创建集群（在任一节点执行）
+redis-cli --cluster create \
+  10.0.1.1:6379 10.0.1.2:6379 10.0.1.3:6379 \
+  10.0.1.4:6379 10.0.1.5:6379 10.0.1.6:6379 \
+  --cluster-replicas 1
+
+# 验证
+redis-cli -c -h 10.0.1.1 -p 6379 cluster info
+redis-cli -c -h 10.0.1.1 -p 6379 cluster nodes</code></pre>
+<div class="highlight-box"><strong>注意：</strong>集群模式下不支持多 key 跨 slot 的操作（如 mget），需要设计好 key 的 hash tag（用 {} 指定 hash 范围，如 user:{123}:info 和 user:{123}:orders 会在同一个 slot）。</div>
+</div></div></div>
+
+<!-- 项目8 -->
+<div class="collapsible"><div class="collapsible-header"><span>&#x1F5C4; 项目八：MySQL 主从复制 + 备份恢复</span></div>
+<div class="collapsible-body"><div class="collapsible-content">
+<h4>学习目标</h4>
+<ul style="padding-left:20px;margin:8px 0"><li>配置 MySQL 异步复制（主从）</li><li>理解 binlog 格式（ROW vs STATEMENT）</li><li>掌握备份恢复和主从切换</li></ul>
+
+<h4>主库配置（my.cnf）</h4>
+<pre><code>[mysqld]
+server-id = 1
+log-bin = mysql-bin
+binlog_format = ROW
+expire_logs_days = 7</code></pre>
+
+<h4>从库配置</h4>
+<pre><code>[mysqld]
+server-id = 2
+relay-log = relay-bin
+read_only = ON</code></pre>
+
+<h4>建立复制</h4>
+<pre><code># 主库创建复制用户
+CREATE USER 'repl'@'%' IDENTIFIED BY 'password';
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%';
+FLUSH TABLES WITH READ LOCK;
+SHOW MASTER STATUS;  -- 记录 File 和 Position
+UNLOCK TABLES;
+
+# 从库
+CHANGE MASTER TO
+  MASTER_HOST='10.0.1.1', MASTER_USER='repl',
+  MASTER_PASSWORD='password', MASTER_LOG_FILE='mysql-bin.000001',
+  MASTER_LOG_POS=1234;
+START SLAVE;
+SHOW SLAVE STATUS\G  -- 确认 Slave_IO_Running 和 Slave_SQL_Running 都是 Yes</code></pre>
+</div></div></div>
+
+</section>
+<!-- ===== 面试高频题 ===== -->
+<section id="tab-interview" class="hidden">
+<h2 class="section-title" style="margin-top:0">&#x1F3AF; 运维/SRE 面试高频题</h2>
+<div class="stats-row"><div class="stat-card"><div class="num">40</div><div class="label">面试题目</div></div><div class="stat-card"><div class="num">3</div><div class="label">难度等级</div></div><div class="stat-card"><div class="num">100%</div><div class="label">含详解答案</div></div></div>
+
+<div id="interviewList"></div>
+
+<div class="card" style="margin-top:24px">
+<h3>&#x1F4DD; 随机出题模式</h3>
+<p style="margin-bottom:12px">从题库中随机抽取 5 道题，测试你的掌握程度。</p>
+<button class="quiz-btn" onclick="startInterviewQuiz()">开始答题</button>
+<div id="interviewQuiz" style="margin-top:16px"></div>
+</div>
+</section>
+
+</main>
+
+
+<!-- ===== Article Editor Modal ===== -->
+<div class="modal-overlay hidden" id="articleEditorOverlay">
+  <div class="modal-box" style="max-width:700px">
+    <button class="modal-close" id="closeArticleEditor">&times;</button>
+    <h2 id="articleEditorTitle">&#x270F;&#xFE0F; 写文章</h2>
+    <input type="hidden" id="editArticleId">
+    <label>标题</label>
+    <input type="text" id="articleTitle" placeholder="输入文章标题...">
+    <label>分类</label>
+    <select id="articleCategory">
+      <option value="fault">故障分析</option>
+      <option value="knowledge">运维知识</option>
+      <option value="practice">实操演练</option>
+      <option value="project">项目学习</option>
+      <option value="interview">面试高频</option>
+    </select>
+    <label>标签（逗号分隔）</label>
+    <input type="text" id="articleTags" placeholder="如: Linux, Docker, K8s">
+    <label>摘要</label>
+    <textarea id="articleSummary" placeholder="简短摘要..." rows="2"></textarea>
+    <label>内容（支持 HTML）</label>
+    <textarea id="articleContent" placeholder="文章内容，支持 HTML 格式..." rows="10" style="font-family:monospace;font-size:.85rem"></textarea>
+    <button class="quiz-btn" id="saveArticleBtn">发布文章</button>
+  </div>
+</div>
+
+<!-- ===== Auth Modal ===== -->
+<div class="modal-overlay hidden" id="authOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="closeAuth">&times;</button>
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-auth-tab="login">登录</button>
+      <button class="auth-tab" data-auth-tab="register">注册</button>
+    </div>
+    <div id="authForm">
+      <label>用户名</label>
+      <input type="text" id="authUsername" placeholder="输入用户名">
+      <label>密码</label>
+      <input type="password" id="authPassword" placeholder="输入密码">
+      <div id="authNicknameField" class="hidden">
+        <label>昵称</label>
+        <input type="text" id="authNickname" placeholder="选填，默认为用户名">
+      </div>
+    </div>
+    <button class="quiz-btn" id="authSubmitBtn">登录</button>
+    <p id="authError" style="color:var(--danger);font-size:.85rem;margin-top:8px;text-align:center"></p>
+  </div>
+</div>
+
+<!-- ===== Admin Panel Modal ===== -->
+<div class="modal-overlay hidden" id="adminOverlay">
+  <div class="modal-box" style="max-width:600px">
+    <button class="modal-close" id="closeAdmin">&times;</button>
+    <h2>&#x1F4CB; 用户管理</h2>
+    <div id="adminUserList"></div>
+  </div>
+</div>
+
+<div id="toastContainer"></div>
+
+<!-- ===== Profile Modal ===== -->
+<div class="modal-overlay hidden" id="profileOverlay">
+  <div class="modal-box" style="max-width:480px">
+    <button class="modal-close" id="closeProfile">&times;</button>
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">U</div>
+      <div class="profile-info">
+        <h3 id="profileName">用户</h3>
+        <p id="profileRole">普通用户</p>
+      </div>
+    </div>
+    <div class="profile-tabs">
+      <button class="profile-tab active" data-ptab="edit">编辑资料</button>
+      <button class="profile-tab" data-ptab="password">修改密码</button>
+    </div>
+    <!-- 编辑资料 -->
+    <div id="ptab-edit">
+      <label>昵称</label>
+      <input type="text" id="profileNickname" placeholder="输入昵称">
+      <label>头像</label>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
+        <img id="avatarPreview" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border);display:none">
+        <div style="flex:1">
+          <input type="file" id="profileAvatarFile" accept="image/jpeg,image/png,image/gif,image/webp" style="width:100%;padding:8px 0;color:var(--text);font-size:.85rem">
+          <p style="font-size:.75rem;color:var(--text-secondary);margin:2px 0 0">支持 JPG/PNG/GIF/WEBP，最大 2MB</p>
+        </div>
+      </div>
+      <button class="quiz-btn" id="saveProfileBtn">保存修改</button>
+    </div>
+    <!-- 修改密码 -->
+    <div id="ptab-password" class="hidden">
+      <label>当前密码</label>
+      <input type="password" id="pwOld" placeholder="输入当前密码">
+      <label>新密码</label>
+      <input type="password" id="pwNew" placeholder="输入新密码（至少6位）">
+      <label>确认新密码</label>
+      <input type="password" id="pwConfirm" placeholder="再次输入新密码">
+      <button class="quiz-btn" id="savePasswordBtn">修改密码</button>
+    </div>
+    <p id="profileError" style="color:var(--danger);font-size:.85rem;margin-top:8px;text-align:center"></p>
+    <p id="profileSuccess" style="color:var(--success);font-size:.85rem;margin-top:8px;text-align:center"></p>
+  </div>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+// ===== Data =====
+const interviewQuestions = [
+  {id:1,d:'基础',t:'linux',q:'Linux 中如何查看某个端口被哪个进程占用？',a:'ss -tlnp | grep :PORT 或 lsof -i :PORT。ss 是更现代的工具，性能优于 netstat。示例：ss -tlnp | grep :8080 可以看到 LISTEN 状态的 8080 端口及对应的进程名和 PID。'},
+  {id:2,d:'基础',t:'linux',q:'什么是 load average？三个数字分别代表什么？',a:'load average 是系统负载平均值，三个数字代表过去 1 分钟、5 分钟、15 分钟的平均负载。关键理解：load average 不仅包括 CPU 正在执行的进程，还包括等待 CPU、等待 I/O 的进程（R 和 D 状态）。判断：负载值 / CPU 核心数 > 1 说明系统过载。4 核机器负载 8 说明有约 4 个进程在等待资源。'},
+  {id:3,d:'基础',t:'linux',q:'软链接和硬链接的区别？',a:'硬链接(hard link)：同一文件系统内，多个文件名指向同一个 inode。删除原文件不影响硬链接。不能跨文件系统，不能链接目录。<br><br>软链接(symbolic link)：存储目标路径的快捷方式。删除原文件后软链接失效。可跨文件系统，可链接目录。创建：ln file hardlink (硬)，ln -s file symlink (软)。查看 inode：ls -li。'},
+  {id:4,d:'基础',t:'linux',q:'如何查找并删除 7 天前的日志文件？',a:'find /var/log -name "*.log" -type f -mtime +7 -delete（直接删除）<br>更安全：先列出确认 find /var/log -name "*.log" -type f -mtime +7 -ls<br>大量文件时：find /var/log -name "*.log" -type f -mtime +7 | xargs rm -f'},
+  {id:5,d:'进阶',t:'linux',q:'Buffer 和 Cache 的区别？',a:'Buffer（缓冲区）：用于块设备 I/O 缓冲，对磁盘写入进行缓冲。<br>Cache（缓存）：页缓存，缓存从磁盘读取的文件数据，提高读性能。<br>查看：free -h 的 buff/cache 列。详细：cat /proc/meminfo | grep -E "Buffers|Cached"<br>注意：Linux 会尽量用空闲内存做缓存，应用需要时内核会自动回收。'},
+  {id:6,d:'进阶',t:'docker',q:'Docker 镜像如何优化体积？说出至少 5 种方法。',a:'1. 多阶段构建：构建和运行分离<br>2. 使用 Alpine 基础镜像（~7MB）<br>3. .dockerignore 排除 node_modules、.git<br>4. 合并 RUN 层：RUN cmd1 && cmd2 && rm -rf /var/cache/*<br>5. 清理包管理器缓存：apt-get clean<br>6. 使用 distroless 镜像（无 shell，更安全）<br>7. 按需安装依赖（只装运行时，不装 dev）'},
+  {id:7,d:'进阶',t:'docker',q:'Docker bridge / host / overlay 网络模式的区别？',a:'bridge（默认）：容器连 docker0 虚拟网桥，NAT 访问外网。适合单机多容器。<br>host：与宿主机共享网络栈，性能最好，无隔离。<br>overlay：跨主机 VXLAN 隧道，用于 Swarm/K8s。<br>none：无网络，完全隔离。<br>macvlan：容器直接获得物理网络 MAC 地址。'},
+  {id:8,d:'进阶',t:'k8s',q:'Deployment 和 StatefulSet 的区别？',a:'Deployment（无状态）：Pod 可任意替换，无固定标识，随意扩缩容。适合 Web API、微服务。<br><br>StatefulSet（有状态）：每个 Pod 有固定标识（pod-0, pod-1...），按顺序启动终止，每个 Pod 有独立 PVC。适合数据库、消息队列、ZK、ES。'},
+  {id:9,d:'进阶',t:'k8s',q:'Service 的 ClusterIP / NodePort / LoadBalancer 区别？',a:'ClusterIP（默认）：仅集群内部可访问，配合 Ingress 对外暴露。最常用。<br>NodePort：在每个 Node 上开放端口 30000-32767。适合测试，生产不推荐。<br>LoadBalancer：调用云厂商 LB，自动分配公网 IP。成本较高。<br>ExternalName：映射到外部 DNS 名称。'},
+  {id:10,d:'高级',t:'k8s',q:'Pod 一直处于 Pending 状态，如何排查？',a:'1. 资源不足：describe pod 看 Events 是否有 "Insufficient cpu/memory"<br>2. 节点选择器/Taint：Pod 的 nodeSelector 不匹配，或节点有未容忍的 Taint<br>3. PVC 无法绑定：没有匹配的 PV<br>4. 镜像拉取问题：ImagePullSecret 或仓库连通性<br>5. 调度器故障：kubectl get pods -n kube-system | grep scheduler<br>最常用排查命令：kubectl describe pod POD 看 Events'},
+  {id:11,d:'高级',t:'network',q:'TCP 三次握手和四次挥手的过程？',a:'三次握手：1. Client→Server: SYN 2. Server→Client: SYN+ACK 3. Client→Server: ACK。为什么三次？TCP 全双工，三次是双方确认收发能力正常的最少次数。<br><br>四次挥手：1. Client→Server: FIN 2. Server→Client: ACK 3. Server→Client: FIN 4. Client→Server: ACK→TIME_WAIT(2MSL)。为什么四次？ACK 和 FIN 分开发送，因为 TCP 全双工，一方发 FIN 只表示自己不发数据了。'},
+  {id:12,d:'高级',t:'network',q:'TIME_WAIT 状态是什么？大量 TIME_WAIT 怎么优化？',a:'TIME_WAIT：主动关闭方等 2MSL（约 60s），确保最后 ACK 到达+旧报文消失。<br><br>优化：1. 开启 tcp_tw_reuse（客户端复用）2. 应用层改长连接/连接池 3. 调整 net.ipv4.tcp_max_tw_buckets'},
+  {id:13,d:'进阶',t:'monitor',q:'Prometheus Pull 和 Push 模型的区别？',a:'Pull（Prometheus）：Server 主动拉取目标 metrics。优点：健康检查天然支持、统一控制频率。缺点：短任务可能来不及被抓取。<br><br>Push（InfluxDB/Graphite）：应用主动推送。优点：适合短任务。缺点：需中间件、可能丢数据。Prometheus 推荐 Pull，短任务可用 Pushgateway。'},
+  {id:14,d:'高级',t:'monitor',q:'如何设计一个高可用的监控告警系统？',a:'1. 数据采集层：多地域 Prometheus / Thanos/Cortex 高可用+长期存储<br>2. 告警引擎：AlertManager 集群（Gossip 协议），去重+分组+抑制<br>3. 告警分级：P0(立即)/P1(30m)/P2(工作时间)/P3(跟踪)<br>4. 告警收敛：相同告警 5m 内只发一次，多条合并摘要<br>5. On-Call 轮值：PagerDuty/钉钉排班<br>6. 静默规则：维护期间抑制<br>7. 告警自愈：常见问题自动执行修复脚本'},
+  {id:15,d:'基础',t:'cicd',q:'什么是蓝绿部署、滚动更新、金丝雀发布？',a:'蓝绿部署：两套环境，一次性切流量。回滚快，资源浪费。<br>滚动更新：逐台替换。K8s 默认策略，资源省，回滚慢。<br>金丝雀发布：小比例流量先验证。最安全，实现复杂。<br>建议：一般用滚动，核心服务用金丝雀，大版本用蓝绿。'},
+  {id:16,d:'进阶',t:'security',q:'SSH 安全加固有哪些措施？',a:'1. 禁用 root 登录：PermitRootLogin no<br>2. 仅密钥登录：PasswordAuthentication no<br>3. 修改默认端口<br>4. 限制用户：AllowUsers deployer<br>5. fail2ban 防暴力破解<br>6. 堡垒机+审计（JumpServer/Teleport）<br>7. 2FA 认证<br>8. IP 白名单'},
+  {id:17,d:'进阶',t:'linux',q:'如何排查服务器被入侵？',a:'1. 断网隔离，保留现场<br>2. ps auxf 找可疑进程<br>3. ss -tunap 看外连 IP<br>4. crontab -l 查定时任务后门<br>5. cat /etc/passwd 查 uid=0 用户<br>6. history 查异常命令<br>7. find / -perm -4000 查 SUID 文件<br>8. systemctl list-units 查启动项<br>9. cat ~/.ssh/authorized_keys 查不明公钥<br>10. lastb 查暴力破解'},
+  {id:18,d:'高级',t:'sre',q:'什么是 SLA / SLO / SLI？三者关系？',a:'SLI（指标）：客观度量值，如"99.9%请求在 300ms 内返回"<br>SLO（目标）：内部目标值，如"可用性 >= 99.95%"，比 SLA 更严格<br>SLA（协议）：对外承诺含赔偿，如"低于 99.9% 赔偿"<br><br>关系：SLI → SLO → SLA。SLO 比 SLA 更严格，留出 Error Budget。Budget 耗尽时暂停新功能，优先稳定性。'},
+  {id:19,d:'进阶',t:'linux',q:'Linux 内核参数调优，你调过哪些？',a:'网络：net.core.somaxconn(TCP 队列)、tcp_tw_reuse(TIME_WAIT 复用)、tcp_max_syn_backlog(SYN 队列)<br>内存：vm.swappiness(数据库设 1)、vm.overcommit_memory(Redis 设 1)<br>文件：fs.file-max(全局 fd 上限)<br>数据库特别：禁用 THP 透明大页（减少延迟抖动）'},
+  {id:20,d:'基础',t:'general',q:'线上服务突然不可用，你的第一反应？',a:'1. 确认故障范围：部分/全部？哪个地域/功能？看监控<br>2. 检查最近变更：30 分钟内有无发布/配置变更？（70%故障由变更引起）<br>3. 快速恢复（止血优先！）：回滚变更/重启/切流量。先恢复再找原因<br>4. 根因分析：日志→监控→调用链，逐层排查<br>5. 复盘改进：Postmortem 报告，改进监控/流程<br>关键原则：MTTR 比找到根因更重要！'},
+  {id:21,d:'进阶',t:'k8s',q:'K8s 的调度流程是怎样的？',a:'两阶段：<br>1. 预选(Filtering)：过滤不符合条件的节点（资源不足、nodeSelector 不匹配、端口冲突、卷不可挂载、Taint 未容忍）<br>2. 优选(Scoring)：对剩余节点打分（资源最空闲、最均衡、Pod/节点亲和性、镜像本地化加分）<br>最终选最高分节点。无合适节点则 Pending。'},
+  {id:22,d:'高级',t:'sre',q:'如何设计一个灾备方案？',a:'RTO（恢复时间目标）/RPO（恢复数据目标）<br><br>冷备：定期备份异地，手动恢复。RTO 长，成本低。<br>温备：备用环境已搭建，异步复制。RTO 中等。<br>热备：双活/多活，同步复制+自动切换。RTO 近 0。<br><br>要点：数据库主从+自动故障转移、跨区域存储复制、GSLB DNS 流量切换、每季度故障切换演练。'},
+  {id:23,d:'基础',t:'linux',q:'说一下 Linux 的启动过程。',a:'1. BIOS/UEFI → 硬件自检<br>2. GRUB2 → 加载内核和 initramfs<br>3. Kernel → 初始化硬件，挂载根文件系统<br>4. systemd(PID=1) → 启动所有服务<br>5. 运行级别 → multi-user.target/graphical.target<br>运维相关：GRUB 配置 /etc/default/grub、救援模式 single/emergency、忘 root 密码进单用户模式重置'},
+  {id:24,d:'进阶',t:'cicd',q:'GitLab CI 和 GitHub Actions 的区别？',a:'GitLab CI：Runner 可自托管、.gitlab-ci.yml 定义、与 GitLab 深度集成(MR/Issue/Registry)、适合私有化<br>GitHub Actions：大量社区 Action 市场、免费额度慷慨、Matrix Build、适合开源<br>共同点：YAML 配置、Docker 执行环境、缓存机制、多种事件触发'},
+  {id:25,d:'高级',t:'sre',q:'什么是混沌工程？落地思路？',a:'通过主动注入故障来验证系统弹性的实践。<br>原则：定义稳态 → 假设稳态持续 → 注入真实故障 → 生产中实验<br>落地：1. Chaos Mesh/LitmusChaos/Gremlin 2. 先杀一个 Pod 观察自愈 3. 逐步加大（网络延迟→依赖不可用→区域故障）4. 建立"游戏日"定期演练 5. 加熔断/限流/重试/降级'},
+  {id:26,d:'进阶',t:'monitor',q:'日志系统的设计要点？日志量特别大怎么处理？',a:'设计：1. 结构化 JSON 2. 统一 TraceID 3. 日志级别规范 4. 敏感信息脱敏 5. 保留周期<br>海量处理：1. 采样（只记录错误+慢请求）2. 分级存储（SSD→HDD→对象存储）3. 只对关键字段建索引 4. 压缩省 80%+ 5. 异步写入 6. ClickHouse 比 ES 写入高 5-10 倍'},
+  {id:27,d:'基础',t:'network',q:'HTTP 常见状态码及含义？',a:'2xx：200 OK, 201 Created, 204 No Content<br>3xx：301 永久重定向, 302 临时, 304 Not Modified<br>4xx：400 参数错误, 401 未认证, 403 无权限, 404 未找到, 429 请求过多<br>5xx：500 内部错误, 502 网关错误(后端挂了), 503 不可用(过载), 504 超时<br>运维重点：502→查后端进程/防火墙，504→查慢查询/GC/死锁，503→扩容或限流'},
+  {id:28,d:'进阶',t:'docker',q:'如何调试只有 distroless 镜像的容器？',a:'K8s Ephemeral Containers：kubectl debug -it POD --image=busybox --target=CONTAINER<br>或：在 Pod 中加带工具的 sidecar、docker cp 拷出文件、临时替换为 debug 版镜像、宿主机上通过 /proc/PID 查看。最佳实践：始终保留 debug 版本镜像。'},
+  {id:29,d:'进阶',t:'k8s',q:'什么是 Helm？为什么用？',a:'Helm 是 K8s 的包管理器（类似 apt/yum/npm）。<br>核心：Chart(打包模板)、Release(部署实例)、Repository(仓库)、values.yaml(配置分离)<br>优势：模板化适配多环境、版本管理+回滚、依赖管理、社区生态、Hooks(部署前后 Job)<br>helm install my-app ./chart -f values-prod.yaml<br>helm rollback my-app 2'},
+  {id:30,d:'高级',t:'sre',q:'容量规划怎么做？',a:'1. 建立基准：压测确定单实例最大 QPS<br>2. 监控趋势：分析历史流量增长<br>3. 计算：需要实例数 = 预估峰值 QPS / (单实例最大 QPS * 0.7 安全系数)<br>4. 考虑突发：大促 3-10 倍流量<br>5. 预留 30-50% buffer<br>工具：Prometheus 长期趋势、wrk/ab/JMeter 压测、HPA 弹性补充'},
+  {id:31,d:'基础',t:'linux',q:'如何查看 Linux 系统发行版和内核版本？',a:'cat /etc/os-release 或 lsb_release -a 查看发行版<br>uname -a 或 uname -r 查看内核版本<br>hostnamectl 查看系统信息（含发行版和内核）'},
+  {id:32,d:'进阶',t:'k8s',q:'什么是 ConfigMap 和 Secret？区别是什么？',a:'ConfigMap：存储非敏感配置（环境变量、配置文件、命令行参数），明文存储。<br>Secret：存储敏感信息（密码、Token、密钥），base64 编码（非加密！）。<br>区别：Secret 数据存储在 tmpfs 中不落地磁盘，RBAC 可分别控制访问。生产建议用 SealedSecret 或 ExternalSecret。'},
+  {id:33,d:'进阶',t:'docker',q:'Docker COPY 和 ADD 的区别？',a:'COPY：从构建上下文复制文件到镜像。简单直接，推荐使用。<br>ADD：功能更多——支持自动解压 tar、支持 URL 下载。但行为不直观，推荐用 COPY + RUN curl 替代 ADD 下载 URL 的场景。'},
+  {id:34,d:'进阶',t:'network',q:'什么是反向代理？正向代理和反向代理的区别？',a:'正向代理：代理客户端，客户端知道目标服务器。如 VPN、翻墙代理。用途：隐藏客户端、访问控制。<br><br>反向代理：代理服务端，客户端不知道后端服务器。如 Nginx。用途：负载均衡、SSL 终结、缓存、安全防护。'},
+  {id:35,d:'基础',t:'general',q:'讲述一下你处理过的最难忘的线上故障。',a:'这是一道开放题，面试官考察：1. 故障排查思路是否清晰 2. 是否遵循止血优先原则 3. 复盘改进意识 4. 沟通协调能力。建议用 STAR 法则：Situation→Task→Action→Result，重点突出你的排查思路和后续改进。'},
+  {id:36,d:'进阶',t:'db',q:'MySQL 的 ACID 是什么？InnoDB 如何实现？',a:'A(原子性)：事务不可分割，通过 undo log 回滚实现<br>C(一致性)：事务前后数据一致，通过 undo log + redo log 保证<br>I(隔离性)：并发事务互不干扰，通过 MVCC + 锁实现（4 个隔离级别）<br>D(持久性)：提交后数据永久保存，通过 redo log + doublewrite buffer 保证'},
+  {id:37,d:'进阶',t:'db',q:'Redis 的持久化方式 RDB 和 AOF 的区别？',a:'RDB：定时快照（如 save 900 1），二进制文件小，恢复快，但可能丢最后几分钟数据。适合备份。<br>AOF：记录每条写命令，有 always/everysec/no 三种策略，文件大但更安全。everysec 是推荐选择。<br>建议：RDB + AOF 都用，RDB 做备份，AOF 做数据安全。Redis 4.0+ 支持混合持久化。'},
+  {id:38,d:'进阶',t:'monitor',q:'什么是分布式追踪（Distributed Tracing）？常用的工具有哪些？',a:'分布式追踪用于追踪一个请求在微服务架构中的完整调用链。<br>核心概念：Trace(一次请求)→Span(一次调用)→SpanContext(传递 TraceID/SpanID)<br>工具：Jaeger、Zipkin、SkyWalking、OpenTelemetry(标准)<br>协议：W3C TraceContext、Jaeger Thrift'},
+  {id:39,d:'高阶',t:'sre',q:'什么是服务网格（Service Mesh）？解决了什么问题？',a:'Service Mesh 将服务间通信从应用层剥离到 Sidecar 代理（如 Envoy）。<br>解决：1. 无需在代码中实现重试/超时/熔断 2. 统一流量管理（金丝雀发布/流量分割）3. 透明 mTLS 加密 4. 统一可观测性<br>代表：Istio、Linkerd、Consul Connect。注意：增加了复杂性和延迟。'},
+  {id:40,d:'进阶',t:'general',q:'DevOps 的核心文化是什么？你如何理解？',a:'CALMS 模型：<br>C(Culture)：协作文化，打破开发和运维壁垒<br>A(Automation)：自动化一切（CI/CD、IaC）<br>L(Lean)：精益思维，减少浪费<br>M(Measurement)：度量一切（四大黄金信号）<br>S(Sharing)：知识分享，集体 Ownership<br><br>核心：You build it, you run it。开发为自己的代码在生产中的表现负责。'}
+];
+
+const practiceQuizzes = [
+  {q:'某 Java 应用 CPU 飙到 100%，首先用哪个命令定位进程？',o:['free -h','top -c','df -h','ss -tlnp'],a:1,e:'top -c 实时显示 CPU 最高进程，是 CPU 排查首选。'},
+  {q:'磁盘空间满，du -sh 统计远小于分区大小，最可能的原因？',o:['du 统计不准','进程持有已删除文件未释放','磁盘坏道','文件系统损坏'],a:1,e:'文件被删除但进程仍持有 fd，磁盘不释放。lsof | grep deleted 可找到。'},
+  {q:'K8s Pod 重启后，容器内写入的文件还在吗？',o:['还在','不在了，文件系统临时','取决于 PV 挂载','/tmp 数据保留'],a:2,e:'容器文件系统临时，Pod 重建数据丢失。持久化需 PV/PVC。'},
+  {q:'MySQL 大量 "Lock wait timeout exceeded"，最可能原因？',o:['连接数不够','有长事务持有锁','SQL 写错','磁盘满'],a:1,e:'长事务持有行锁不释放导致等待超时。查 INNODB_TRX 找长事务。'},
+  {q:'Nginx 返回 502，以下哪项不是可能原因？',o:['后端服务挂','防火墙拦截','DNS 解析失败','后端处理超时'],a:2,e:'DNS 失败通常导致连接错误而非 502。502 最常见是后端未启动或无响应。'},
+  {q:'Redis 内存使用超过 maxmemory 且策略为 noeviction 时会怎样？',o:['自动删除数据','写入报错','自动扩容','Redis 重启'],a:1,e:'noeviction 策略下，内存满时所有写入请求都会返回错误。生产务必设置合理的淘汰策略（如 allkeys-lru）。'},
+  {q:'Docker 容器中 PID 1 的进程退出后，容器会怎样？',o:['自动重启','容器停止','保持运行','变为僵尸状态'],a:1,e:'PID 1 是容器的主进程，退出则容器停止。这也是为什么容器要用 exec 形式 ENTRYPOINT。'},
+  {q:'TCP 三次握手中，如果第三次 ACK 丢失会怎样？',o:['连接建立失败','Server 重发 SYN+ACK','Client 重发 ACK','连接立即断开'],a:1,e:'Server 没收到 ACK 会超时重发 SYN+ACK。Client 认为连接已建立可以发数据，但 Server 可能还没准备好。'},
+];
+
+let currentPQ=0, pqAnswered=false, practiceScore=0;
+let interviewQuizQuestions=[], interviewQuizIdx=0, interviewQuizScore=0;
+let completedItems=new Set();
+try{completedItems=new Set(JSON.parse(localStorage.getItem('ops_progress')||'[]'));}catch(e){}
+
+function saveProgress(){
+  localStorage.setItem('ops_progress',JSON.stringify([...completedItems]));
+  updateProgressBar();
+}
+function updateProgressBar(){
+  let total=document.querySelectorAll('.collapsible').length;
+  let pct=Math.min(100,Math.round((completedItems.size/Math.max(1,total))*100));
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=pct+'%';
+}
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    let target=tab.dataset.tab;
+    ['fault','knowledge','practice','project','interview'].forEach(t=>{
+      let el=document.getElementById('tab-'+t);
+      if(t===target)el.classList.remove('hidden');else el.classList.add('hidden');
+    });
+    if(target==='interview')renderInterviewList();
+  });
+});
+
+// Collapsible
+document.addEventListener('click',e=>{
+  let header=e.target.closest('.collapsible-header');
+  if(!header)return;
+  let parent=header.parentElement;
+  parent.classList.toggle('open');
+  let id=parent.dataset.id;
+  if(id){completedItems.add(id);saveProgress();}
+});
+
+// Search
+document.getElementById('searchBox').addEventListener('input',function(e){
+  let term=e.target.value.toLowerCase().trim();
+  document.querySelectorAll('.collapsible,.card').forEach(c=>{
+    let collapsible=c.closest('.collapsible')||c;
+    if(!term){collapsible.style.display='';return;}
+    collapsible.style.display=c.textContent.toLowerCase().includes(term)?'':'none';
+  });
+});
+
+// Theme toggle
+let savedTheme=localStorage.getItem('ops_theme')||'dark';
+document.body.setAttribute('data-theme',savedTheme);
+document.getElementById('themeToggle').textContent=savedTheme==='dark'?'🌙':'☀️';
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  let next=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.body.setAttribute('data-theme',next);
+  document.getElementById('themeToggle').textContent=next==='dark'?'🌙':'☀️';
+  localStorage.setItem('ops_theme',next);
+});
+
+// ===== Terminal =====
+let termOutput=document.getElementById('termOutput');
+let termInput=document.getElementById('termInput');
+function appendTerminal(text,cls=''){
+  let span=document.createElement('span');span.textContent=text;span.className=cls;
+  termOutput.appendChild(span);termOutput.appendChild(document.createTextNode('\n'));
+  document.getElementById('terminal').scrollTop=document.getElementById('terminal').scrollHeight;
+}
+function runSimCmd(cmd){
+  appendTerminal('root@server:~# '+cmd,'green');
+  let lower=cmd.toLowerCase().trim();
+  let sim={
+    'top':"top - 14:32:08 up 30 days,  2 users,  load average: 0.52, 0.38, 0.41\nTasks: 245 total, 1 running, 244 sleeping\n%Cpu(s): 12.3 us, 3.1 sy, 0.8 wa, 82.2 id\nMiB Mem: 15872 total, 12340 used, 3531 free",
+    'free -h':"              total   used   free   shared   buff/cache   available\nMem:           15Gi   12Gi   3.4Gi   456Mi        1.2Gi       3.8Gi\nSwap:         4.0Gi     0B   4.0Gi",
+    'df -h':"Filesystem   Size  Used Avail Use% Mounted on\n/dev/sda1     50G   35G   13G  73% /\n/dev/sdb1    200G  120G   71G  63% /data",
+    'ss -tlnp':"State  Recv-Q Send-Q Local:Port         Peer:Port  Process\nLISTEN 0   128    0.0.0.0:22         0.0.0.0:*  sshd(892)\nLISTEN 0   128    0.0.0.0:80         0.0.0.0:*  nginx(1234)\nLISTEN 0   128    0.0.0.0:443        0.0.0.0:*  nginx(1234)\nLISTEN 0   128    127.0.0.1:3306     0.0.0.0:*  mysqld(1567)\nLISTEN 0   128    0.0.0.0:8080       0.0.0.0:*  java(2890)",
+    'ps aux':"USER  PID %CPU %MEM    VSZ   RSS COMMAND\nmysql 1567  8.2 12.3 2456780 1987654 mysqld\njava  2890 45.1  8.7 4567890 1398765 java -jar app.jar\nroot  3456  2.1  1.2  123456  98765 prometheus",
+    'cat /proc/loadavg':"0.52 0.38 0.41 1/845 28901",
+    'iostat':"avg-cpu: %user %nice %system %iowait %idle\n          12.32  0.00   3.08   0.85 83.76\nDevice  r/s   w/s   await  %util\nsda    45.2  32.1   8.50  32.5\nsdb   120.5  85.3  12.30  78.2",
+    'docker ps':"CONTAINER ID  IMAGE                STATUS     PORTS                   NAMES\na1b2c3d4e5f6  app:v1.2.3            Up 3h      0.0.0.0:8080->8080/tcp  app-prod\nb2c3d4e5f6a1  mysql:8.0             Up 30d     3306/tcp                mysql-prod\nc3d4e5f6a1b2  redis:7-alpine        Up 30d     6379/tcp                redis-prod",
+    'kubectl get pods':"NAME                         READY  STATUS   RESTARTS  AGE\napp-deployment-abc-xyz     1/1    Running  0         2d3h\napp-deployment-abc-pqr     1/1    Running  0         2d3h\nmysql-statefulset-0         1/1    Running  0         30d",
+    'uptime':"14:35:22 up 30 days, 22:18, 2 users, load average: 0.48, 0.39, 0.40",
+    'vmstat':"procs -----memory----- ---swap-- --io-- -system-- --cpu--\n r b  swpd  free  buff cache si so bi bo  in  cs us sy id wa\n 2 0     0 3617890 915660 1256780  0  0 12 34  45  78 12  3 83  1",
+    'journalctl':"Apr 07 14:25:01 nginx[1234]: GET /api/users 200 1234\nApr 07 14:25:02 nginx[1234]: POST /api/login 401 89\nApr 07 14:25:05 nginx[1234]: GET /api/orders 502 166\nApr 07 14:25:06 nginx[1234]: upstream timed out connecting to upstream"
+  };
+  let output='';
+  if(lower.startsWith('top'))output=sim['top'];
+  else if(lower.includes('free -h'))output=sim['free -h'];
+  else if(lower.includes('df -h'))output=sim['df -h'];
+  else if(lower.includes('ss -tlnp'))output=sim['ss -tlnp'];
+  else if(lower.startsWith('ps aux'))output=sim['ps aux'];
+  else if(lower.includes('cat /proc/loadavg'))output=sim['cat /proc/loadavg'];
+  else if(lower.includes('iostat'))output=sim['iostat'];
+  else if(lower.startsWith('docker ps'))output=sim['docker ps'];
+  else if(lower.startsWith('kubectl get pods'))output=sim['kubectl get pods'];
+  else if(lower.includes('uptime'))output=sim['uptime'];
+  else if(lower.includes('vmstat'))output=sim['vmstat'];
+  else if(lower.startsWith('journalctl'))output=sim['journalctl'];
+  else if(lower.includes('ls'))output='app/  config/  data/  logs/  scripts/';
+  else if(lower.includes('grep'))output='匹配行 1: ... (模拟输出)\n匹配行 2: ...';
+  else if(lower.includes('netstat'))output=sim['ss -tlnp'];
+  else output='命令已执行（模拟）。实际服务器上运行可获真实输出。';
+  output.split('\n').forEach(line=>{
+    let cls='';if(line.includes('error')||line.includes('ERROR')||line.includes('502'))cls='red';else if(line.includes('WARN'))cls='yellow';
+    appendTerminal('  '+line,cls);
+  });
+}
+termInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&termInput.value.trim()){runSimCmd(termInput.value.trim());termInput.value='';}});
+document.getElementById('terminal').addEventListener('click',()=>termInput.focus());
+
+// ===== Quiz =====
+function loadPracticeQuiz(){
+  if(currentPQ>=practiceQuizzes.length){
+    document.getElementById('pqQuestion').innerHTML='<h3 style="color:var(--success)">🎉 完成！正确率: '+practiceScore+'/'+practiceQuizzes.length+'</h3>';
+    document.getElementById('pqOptions').innerHTML='';document.getElementById('pqResult').innerHTML='';
+    document.getElementById('pqSubmit').style.display='none';document.getElementById('pqNext').style.display='none';return;
+  }
+  pqAnswered=false;let quiz=practiceQuizzes[currentPQ];
+  document.getElementById('pqQuestion').innerHTML='<h4>题目 '+(currentPQ+1)+'/'+practiceQuizzes.length+'：'+quiz.q+'</h4>';
+  document.getElementById('pqOptions').innerHTML=quiz.o.map((o,i)=>'<div class="quiz-option" onclick="selectPQOption(this,'+i+')">'+String.fromCharCode(65+i)+'. '+o+'</div>').join('');
+  document.getElementById('pqResult').innerHTML='';document.getElementById('pqSubmit').style.display='';document.getElementById('pqSubmit').disabled=false;
+  document.getElementById('pqNext').style.display='none';
+}
+function selectPQOption(el,idx){
+  if(pqAnswered)return;
+  document.querySelectorAll('#pqOptions .quiz-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');el.dataset.selected=idx;
+}
+function submitPracticeQuiz(){
+  if(pqAnswered)return;let sel=document.querySelector('#pqOptions .quiz-option.selected');
+  if(!sel){showToast('请先选择一个选项');return;}
+  pqAnswered=true;let idx=parseInt(sel.dataset.selected),quiz=practiceQuizzes[currentPQ];
+  document.querySelectorAll('#pqOptions .quiz-option').forEach((o,i)=>{o.style.pointerEvents='none';if(i===quiz.a)o.classList.add('correct');if(i===idx&&i!==quiz.a)o.classList.add('wrong');});
+  if(idx===quiz.a){practiceScore++;document.getElementById('pqResult').innerHTML='<div class="highlight-box success">✅ 正确！'+quiz.e+'</div>';}
+  else{document.getElementById('pqResult').innerHTML='<div class="highlight-box warn">❌ 错误。正确答案是 '+String.fromCharCode(65+quiz.a)+'。<br>'+quiz.e+'</div>';}
+  document.getElementById('pqSubmit').disabled=true;document.getElementById('pqNext').style.display='';
+}
+function nextPracticeQuiz(){currentPQ++;loadPracticeQuiz();}
+
+// ===== Interview =====
+function renderInterviewList(){
+  let c=document.getElementById('interviewList');
+  c.innerHTML='<h2 class="section-title">📋 全部面试题（点击展开查看答案）</h2>'+interviewQuestions.map(iq=>'<div class="collapsible" data-id="iq-'+iq.id+'"><div class="collapsible-header"><span>#'+iq.id+' '+iq.q.substring(0,60)+'...</span><span style="font-size:.75rem;color:var(--text-secondary)"><span class="tag tag-'+iq.t+'">'+iq.t+'</span> <span class="severity '+(iq.d==='基础'?'medium':iq.d==='进阶'?'high':'critical')+'">'+iq.d+'</span></span></div><div class="collapsible-body"><div class="collapsible-content">'+iq.a+'</div></div></div>').join('');
+  // 全局 click 监听器已处理 collapsible 展开/收起，此处不需要重复绑定
+}
+function startInterviewQuiz(){
+  interviewQuizIdx=0;interviewQuizScore=0;
+  let shuffled=[...interviewQuestions].sort(()=>Math.random()-0.5);
+  interviewQuizQuestions=shuffled.slice(0,5);
+  document.getElementById('interviewQuiz').innerHTML='<h4 style="margin-bottom:12px">📝 随机抽题模式（共5题）</h4><div id="iqQuizContent"></div>';
+  renderIQQuestion();
+}
+function renderIQQuestion(){
+  if(interviewQuizIdx>=interviewQuizQuestions.length){
+    document.getElementById('iqQuizContent').innerHTML='<h3 style="color:var(--success)">🎉 答题结束！得分: '+interviewQuizScore+'/'+interviewQuizQuestions.length+'</h3><p>正确率: '+Math.round(interviewQuizScore/interviewQuizQuestions.length*100)+'%</p>';return;
+  }
+  let iq=interviewQuizQuestions[interviewQuizIdx];
+  let correctAns=iq.a.substring(0,100);
+  let allAns=interviewQuestions.filter(q=>q.id!==iq.id).sort(()=>Math.random()-0.5).slice(0,3).map(q=>q.a.substring(0,100));
+  allAns.push(correctAns);let options=allAns.sort(()=>Math.random()-0.5);
+  document.getElementById('iqQuizContent').innerHTML='<p><strong>题目 '+(interviewQuizIdx+1)+'/'+interviewQuizQuestions.length+'：</strong>'+iq.q+'</p><div id="iqOpts">'+options.map((o,i)=>'<div class="quiz-option" onclick="selectIQOption(this,'+i+')" data-idx="'+i+'">'+String.fromCharCode(65+i)+'. '+o+'</div>').join('')+'</div><div id="iqFeedback" style="margin-top:10px"></div><button class="quiz-btn" id="iqSubmitBtn" onclick="submitIQAnswer('+options.indexOf(correctAns)+')" style="margin-top:8px">提交</button>';
+}
+function selectIQOption(el,idx){
+  if(el.parentElement.dataset.locked)return;
+  el.parentElement.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function submitIQAnswer(correctIdx){
+  let optsDiv=document.getElementById('iqOpts');
+  if(optsDiv.dataset.locked)return;
+  let sel=optsDiv.querySelector('.quiz-option.selected');
+  if(!sel){showToast('请先选择一个选项');return;}
+  optsDiv.dataset.locked='1';let idx=parseInt(sel.dataset.idx);
+  optsDiv.querySelectorAll('.quiz-option').forEach((o,i)=>{o.style.pointerEvents='none';if(i===correctIdx)o.classList.add('correct');if(i===idx&&i!==correctIdx)o.classList.add('wrong');});
+  let iq=interviewQuizQuestions[interviewQuizIdx],fb=document.getElementById('iqFeedback');
+  if(idx===correctIdx){interviewQuizScore++;fb.innerHTML='<div class="highlight-box success">✅ 正确！</div>';}
+  else{fb.innerHTML='<div class="highlight-box warn">❌ 错误。正确答案：<br>'+iq.a+'</div>';}
+  document.getElementById('iqSubmitBtn').textContent='下一题 →';document.getElementById('iqSubmitBtn').onclick=()=>{interviewQuizIdx++;renderIQQuestion();};
+}
+
+// ===== Toast =====
+
+// ===== Init =====
+updateProgressBar();
+document.querySelector('.collapsible')&&document.querySelector('.collapsible').classList.add('open');
+loadPracticeQuiz();renderInterviewList();
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();document.getElementById('searchBox').focus();}});
+
+// ===== API Client =====
+const API_BASE = '';
+
+let currentUser = null;
+let currentArticleId = null;
+
+function getToken() { return localStorage.getItem('sre_token'); }
+function setToken(t) { if (t) localStorage.setItem('sre_token', t); else localStorage.removeItem('sre_token'); }
+function getUser() {
+  const u = localStorage.getItem('sre_user');
+  return u ? JSON.parse(u) : null;
+}
+function setUser(u) {
+  if (u) localStorage.setItem('sre_user', JSON.stringify(u));
+  else localStorage.removeItem('sre_user');
+}
+
+async function api(path, options = {}) {
+  const token = getToken();
+  const headers = { 'Content-Type': 'application/json', ...options.headers };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const res = await fetch(API_BASE + path, { ...options, headers });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || '请求失败');
+  return data;
+}
+
+function showToast(msg) {
+  let toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.getElementById('toastContainer').appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2000);
+}
+
+// ===== Auth =====
+function updateAuthUI() {
+  const user = getUser();
+  const loginBtn = document.getElementById('loginBtn');
+  const userInfo = document.getElementById('userInfo');
+  const avatarEl = document.getElementById('userAvatar');
+  if (user) {
+    loginBtn.classList.add('hidden');
+    userInfo.classList.remove('hidden');
+    if (user.avatar) {
+      avatarEl.textContent = '';
+      avatarEl.style.backgroundImage = 'url(' + user.avatar + ')';
+      avatarEl.style.backgroundSize = 'cover';
+      avatarEl.style.backgroundPosition = 'center';
+    } else {
+      avatarEl.textContent = (user.nickname || user.username)[0].toUpperCase();
+      avatarEl.style.backgroundImage = '';
+      avatarEl.style.backgroundColor = 'var(--accent)';
+    }
+    document.getElementById('userDisplayName').textContent = user.nickname || user.username;
+    document.getElementById('dropdownUsername').textContent = (user.nickname || user.username) + (user.role === 'admin' ? ' (管理员)' : '');
+    document.getElementById('dropdownAdmin').classList.toggle('hidden', user.role !== 'admin');
+  } else {
+    loginBtn.classList.remove('hidden');
+    userInfo.classList.add('hidden');
+  }
+}
+
+function openAuthModal(tab) {
+  document.getElementById('authOverlay').classList.remove('hidden');
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.authTab === tab));
+  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? '登录' : '注册';
+  document.getElementById('authNicknameField').classList.toggle('hidden', tab === 'login');
+  document.getElementById('authError').textContent = '';
+}
+
+function closeAuthModal() {
+  document.getElementById('authOverlay').classList.add('hidden');
+}
+
+async function handleAuth() {
+  const isLogin = document.querySelector('.auth-tab.active').dataset.authTab === 'login';
+  const username = document.getElementById('authUsername').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const nickname = document.getElementById('authNickname').value.trim();
+
+  if (!username || !password) {
+    document.getElementById('authError').textContent = '请填写用户名和密码';
+    return;
+  }
+
+  try {
+    const data = await api('/api/auth/' + (isLogin ? 'login' : 'register'), {
+      method: 'POST',
+      body: JSON.stringify({ username, password, nickname: nickname || username }),
+    });
+    setToken(data.token);
+    setUser(data.user);
+    currentUser = data.user;
+    updateAuthUI();
+    closeAuthModal();
+    document.getElementById('authUsername').value = '';
+    document.getElementById('authPassword').value = '';
+    document.getElementById('authNickname').value = '';
+    showToast(isLogin ? '登录成功' : '注册成功');
+  } catch (err) {
+    document.getElementById('authError').textContent = err.message;
+  }
+}
+
+async function handleLogout() {
+  setToken(null);
+  setUser(null);
+  currentUser = null;
+  updateAuthUI();
+  showToast('已退出登录');
+  document.getElementById('userDropdown').classList.add('hidden');
+}
+
+// ===== Articles =====
+async function loadArticles() {
+  try {
+    const data = await api('/api/articles?limit=50');
+    document.getElementById('articleCount').textContent = data.total;
+    const user = getUser();
+    const myCount = user ? data.articles.filter(a => a.user_id === user.id).length : 0;
+    document.getElementById('myArticleCount').textContent = myCount;
+
+    const container = document.getElementById('articleListContainer');
+    if (data.articles.length === 0) {
+      container.innerHTML = '<div class="card"><p style="text-align:center;color:var(--text-secondary)">暂无文章，去写第一篇吧！</p></div>';
+      return;
+    }
+    container.innerHTML = data.articles.map(a => {
+      const tags = (a.tags || '').split(',').filter(Boolean).map(t => '<span class="tag tag-general">' + t.trim() + '</span>').join(' ');
+      return '<div class="article-card" onclick="openArticle(' + a.id + ')">' +
+        '<h3>' + escapeHtml(a.title) + '</h3>' +
+        '<div class="meta">' +
+          '👤 ' + escapeHtml(a.nickname || a.username) + ' &middot; ' +
+          '📅 ' + formatDate(a.created_at) +
+          (a.category ? ' &middot; 📂 ' + a.category : '') +
+        '</div>' +
+        '<div class="summary">' + escapeHtml(a.summary || (a.content || '').substring(0, 120)) + '</div>' +
+        (tags ? '<div style="margin-top:6px">' + tags + '</div>' : '') +
+      '</div>';
+    }).join('');
+  } catch (err) {
+    showToast('加载文章失败: ' + err.message);
+  }
+}
+
+async function openArticle(id) {
+  try {
+    const article = await api('/api/articles/' + id);
+    currentArticleId = id;
+    document.getElementById('articleListView').classList.add('hidden');
+    document.getElementById('articleDetailView').classList.remove('hidden');
+
+    const user = getUser();
+    const isOwner = user && user.id === article.user_id;
+    const isAdmin = user && user.role === 'admin';
+
+    document.getElementById('editArticleBtn').classList.toggle('hidden', !isOwner && !isAdmin);
+    document.getElementById('deleteArticleBtn').classList.toggle('hidden', !isOwner && !isAdmin);
+
+    var likesCount = article.likes_count || 0;
+    document.getElementById('articleDetailContent').innerHTML =
+      '<h1>' + escapeHtml(article.title) + '</h1>' +
+      '<div class="meta">' +
+        '👤 ' + escapeHtml(article.nickname || article.username) +
+        ' &middot; 📅 ' + formatDate(article.created_at) +
+        (article.category ? ' &middot; 📂 ' + article.category : '') +
+        (article.tags ? ' &middot; 🏷️ ' + article.tags : '') +
+      '</div>' +
+      '<div style="margin-bottom:12px">' +
+        '<button class="like-btn" id="detailLikeBtn" onclick="toggleLike(' + id + ', this)" data-liked="false">' +
+          '<span>❤</span><span class="count">' + likesCount + '</span>' +
+        '</button>' +
+      '</div>' +
+      '<div class="content">' + article.content + '</div>';
+
+    // 加载点赞状态
+    loadLikeStatus(id);
+    loadComments(id);
+  } catch (err) {
+    showToast('加载文章失败: ' + err.message);
+  }
+}
+
+async function loadLikeStatus(articleId) {
+  var user = getUser();
+  if (!user) return;
+  try {
+    var data = await api('/api/articles/' + articleId + '/like');
+    var btn = document.getElementById('detailLikeBtn');
+    if (btn) {
+      btn.dataset.liked = data.liked;
+      btn.classList.toggle('liked', data.liked);
+      btn.querySelector('.count').textContent = data.likes_count;
+    }
+  } catch (e) { /* ignore */ }
+}
+
+function backToArticleList() {
+  currentArticleId = null;
+  document.getElementById('articleListView').classList.remove('hidden');
+  document.getElementById('articleDetailView').classList.add('hidden');
+  loadArticles();
+}
+
+function openArticleEditor(articleId) {
+  document.getElementById('articleEditorOverlay').classList.remove('hidden');
+  if (articleId) {
+    document.getElementById('articleEditorTitle').textContent = '✏️ 编辑文章';
+    document.getElementById('saveArticleBtn').textContent = '保存修改';
+    fetch('/api/articles/' + articleId).then(r => r.json()).then(a => {
+      document.getElementById('editArticleId').value = a.id;
+      document.getElementById('articleTitle').value = a.title;
+      document.getElementById('articleCategory').value = a.category || '';
+      document.getElementById('articleTags').value = a.tags || '';
+      document.getElementById('articleSummary').value = a.summary || '';
+      document.getElementById('articleContent').value = a.content;
+    });
+  } else {
+    document.getElementById('articleEditorTitle').textContent = '✏️ 写文章';
+    document.getElementById('saveArticleBtn').textContent = '发布文章';
+    document.getElementById('editArticleId').value = '';
+    document.getElementById('articleTitle').value = '';
+    document.getElementById('articleCategory').value = '';
+    document.getElementById('articleTags').value = '';
+    document.getElementById('articleSummary').value = '';
+    document.getElementById('articleContent').value = '';
+  }
+}
+
+function closeArticleEditor() {
+  document.getElementById('articleEditorOverlay').classList.add('hidden');
+}
+
+async function saveArticle() {
+  // 检查是否已登录
+  if (!getToken()) {
+    showToast('请先登录');
+    closeArticleEditor();
+    document.getElementById('loginBtn').click();
+    return;
+  }
+
+  const id = document.getElementById('editArticleId').value;
+  const title = document.getElementById('articleTitle').value.trim();
+  const content = document.getElementById('articleContent').value.trim();
+
+  if (!title || !content) {
+    showToast('标题和内容不能为空');
+    return;
+  }
+
+  const body = {
+    title,
+    content,
+    summary: document.getElementById('articleSummary').value.trim(),
+    tags: document.getElementById('articleTags').value.trim(),
+    category: document.getElementById('articleCategory').value,
+  };
+
+  try {
+    if (id) {
+      await api('/api/articles/' + id, { method: 'PUT', body: JSON.stringify(body) });
+      showToast('文章已更新');
+      closeArticleEditor();
+      openArticle(parseInt(id));
+    } else {
+      const data = await api('/api/articles', { method: 'POST', body: JSON.stringify(body) });
+      showToast('文章已发布');
+      closeArticleEditor();
+      var savedCat = body.category;
+      if (savedCat && ['fault','knowledge','practice','project','interview'].indexOf(savedCat) >= 0) {
+        loadCommunityContent(savedCat);
+      }
+    }
+  } catch (err) {
+    console.error('[SAVE_ARTICLE]', err);
+    showToast('操作失败: ' + err.message);
+  }
+}
+
+async function deleteArticle() {
+  if (!currentArticleId || !confirm('确定要删除这篇文章吗？')) return;
+  try {
+    await api('/api/articles/' + currentArticleId, { method: 'DELETE' });
+    showToast('文章已删除');
+    backToArticleList();
+  } catch (err) {
+    showToast('删除失败: ' + err.message);
+  }
+}
+
+// ===== Comment Like =====
+var commentSortState = {};
+
+async function toggleCommentLike(commentId, btn) {
+  if (!getUser()) { showToast('请先登录'); document.getElementById('loginBtn').click(); return; }
+  try {
+    var data = await api('/api/comments/' + commentId + '/like', { method: 'POST' });
+    btn.dataset.liked = data.liked;
+    btn.querySelector('.count').textContent = data.likes_count;
+    btn.classList.toggle('liked', data.liked);
+  } catch (err) { showToast('操作失败: ' + err.message); }
+}
+
+// ===== Reply Fold =====
+function toggleReplies(el) {
+  var container = el.nextElementSibling;
+  if (!container) return;
+  var isHidden = container.style.display === 'none';
+  container.style.display = isHidden ? 'block' : 'none';
+  el.innerHTML = el.innerHTML.replace(isHidden ? '▸' : '▾', isHidden ? '▾' : '▸');
+}
+
+// 将嵌套回复展平为同级列表，每条记录父级用户名
+function flattenReplies(comments, parentName) {
+  var result = [];
+  comments.forEach(function(c) {
+    result.push({ comment: c, parentName: parentName });
+    if (c.replies && c.replies.length > 0) {
+      result = result.concat(flattenReplies(c.replies, c.nickname || c.username));
+    }
+  });
+  return result;
+}
+
+// 渲染单条回复项（扁平化用）
+function renderReplyItem(item, canDelete, artId) {
+  var c = item.comment;
+  var parentStr = item.parentName
+    ? ' <span style="color:var(--text-secondary);font-size:.8rem">回复 @' + escapeHtml(item.parentName) + '</span>'
+    : '';
+  var likesCount = c.likes_count || 0;
+  var likeBtn = '<button class="like-btn" onclick="event.stopPropagation();toggleCommentLike(' + c.id + ', this)" data-liked="false">' +
+    '<span>❤</span><span class="count">' + likesCount + '</span></button>';
+  if (artId) {
+    // 社区评论模式
+    return '<div class="comment-item">' +
+      '<div class="meta">' + renderAvatarHtml(c.nickname||c.username, c.avatar, 20) + ' <strong>' + escapeHtml(c.nickname||c.username) + '</strong>' + parentStr + ' ' + formatDate(c.created_at) + '</div>' +
+      '<div class="content" style="padding-left:2em">' + escapeHtml(c.content) + '</div>' +
+      '<div class="actions">' +
+        likeBtn +
+        (getUser() ? '<button onclick="showCommunityReplyForm(' + c.id + ',' + artId + ')">回复</button>' : '') +
+        (canDelete ? '<button class="del-btn" onclick="deleteCommunityComment(' + c.id + ',' + artId + ')">删除</button>' : '') +
+      '</div></div>';
+  }
+  // 文章评论模式
+  return '<div class="comment-item">' +
+    '<div class="meta">' + renderAvatarHtml(c.nickname||c.username, c.avatar, 20) + ' <strong>' + escapeHtml(c.nickname||c.username) + '</strong>' + parentStr + ' ' + formatDate(c.created_at) + '</div>' +
+    '<div class="content" style="padding-left:2em">' + escapeHtml(c.content) + '</div>' +
+    '<div class="actions">' +
+      likeBtn +
+      (getUser() ? '<button onclick="showReplyForm(' + c.id + ')">回复</button>' : '') +
+      (canDelete ? '<button class="del-btn" onclick="deleteComment(' + c.id + ')">删除</button>' : '') +
+    '</div></div>';
+}
+
+// ===== Comments =====
+var commentSort = 'newest';
+
+async function loadComments(articleId) {
+  try {
+    var sort = commentSort;
+    const comments = await api('/api/articles/' + articleId + '/comments?sort=' + sort);
+    const container = document.getElementById('commentList');
+    var sortBar = '<div style="display:flex;gap:8px;margin-bottom:12px">' +
+      '<button class="sort-btn ' + (sort === 'newest' ? 'active' : '') + '" onclick="changeCommentSort(\'' + articleId + '\', \'newest\')">⏱ 最新</button>' +
+      '<button class="sort-btn ' + (sort === 'popular' ? 'active' : '') + '" onclick="changeCommentSort(\'' + articleId + '\', \'popular\')">🔥 最热</button>' +
+      '</div>';
+    if (comments.length === 0) {
+      container.innerHTML = sortBar + '<p style="color:var(--text-secondary);font-size:.9rem">暂无评论，来写第一条吧</p>';
+      return;
+    }
+    container.innerHTML = sortBar + renderComments(comments, 0);
+  } catch (err) {
+    showToast('加载评论失败');
+  }
+}
+
+function changeCommentSort(articleId, sort) {
+  commentSort = sort;
+  loadComments(articleId);
+}
+
+function renderComments(comments, depth) {
+  return comments.map(c => {
+    const user = getUser();
+    const canDelete = user && (user.id === c.user_id || user.role === 'admin');
+    var likesCount = c.likes_count || 0;
+    var likeBtn = '<button class="like-btn" onclick="event.stopPropagation();toggleCommentLike(' + c.id + ', this)" data-liked="false">' +
+      '<span>❤</span><span class="count">' + likesCount + '</span></button>';
+    var html = '<div class="comment-item">' +
+      '<div class="meta">' +
+        renderAvatarHtml(c.nickname||c.username, c.avatar, 20) + ' ' +
+        '<strong>' + escapeHtml(c.nickname || c.username) + '</strong> ' +
+        formatDate(c.created_at) +
+      '</div>' +
+      '<div class="content" style="padding-left:2em">' + escapeHtml(c.content) + '</div>' +
+      '<div class="actions">' +
+        likeBtn +
+        (user ? '<button onclick="showReplyForm(' + c.id + ')">回复</button>' : '') +
+        (canDelete ? '<button class="del-btn" onclick="deleteComment(' + c.id + ')">删除</button>' : '') +
+      '</div>';
+    if (c.replies && c.replies.length > 0) {
+      var flat = flattenReplies(c.replies, c.nickname || c.username);
+      html += '<div class="reply-toggle" onclick="toggleReplies(this)">💬 ' + flat.length + ' 条回复 ▸</div>';
+      html += '<div class="reply-container" style="display:none">' +
+        flat.map(function(r) { return renderReplyItem(r, getUser() && (getUser().id === r.comment.user_id || getUser().role === 'admin'), null); }).join('') +
+      '</div>';
+    }
+    html += '</div>';
+    return html;
+  }).join('');
+}
+
+function showReplyForm(commentId) {
+  const existing = document.getElementById('reply-form-' + commentId);
+  if (existing) { existing.remove(); return; }
+
+  const form = document.createElement('div');
+  form.className = 'reply-form';
+  form.id = 'reply-form-' + commentId;
+  form.innerHTML = '<textarea id="replyInput-' + commentId + '" placeholder="写下你的回复..." rows="1"></textarea>' +
+    '<button onclick="submitReply(' + commentId + ')">回复</button>' +
+    '<button class="cancel-btn" onclick="this.parentElement.remove()">取消</button>';
+  document.querySelector('.comment-item:has(.actions button[onclick*="' + commentId + '"])')?.after(form);
+  // Fallback: append to comment section
+  if (!document.getElementById('reply-form-' + commentId)) {
+    document.getElementById('commentList').appendChild(form);
+  }
+}
+
+async function submitComment() {
+  if (!currentArticleId) return;
+  const input = document.getElementById('commentInput');
+  const content = input.value.trim();
+  if (!content) { showToast('评论不能为空'); return; }
+
+  const user = getUser();
+  if (!user) { showToast('请先登录'); openAuthModal('login'); return; }
+
+  try {
+    await api('/api/articles/' + currentArticleId + '/comments', {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    });
+    input.value = '';
+    loadComments(currentArticleId);
+    showToast('评论成功');
+  } catch (err) {
+    showToast('评论失败: ' + err.message);
+  }
+}
+
+async function submitReply(parentId) {
+  if (!currentArticleId) return;
+  const input = document.getElementById('replyInput-' + parentId);
+  if (!input) return;
+  const content = input.value.trim();
+  if (!content) { showToast('回复不能为空'); return; }
+
+  try {
+    await api('/api/articles/' + currentArticleId + '/comments', {
+      method: 'POST',
+      body: JSON.stringify({ content, parent_id: parentId }),
+    });
+    input.value = '';
+    document.getElementById('reply-form-' + parentId)?.remove();
+    loadComments(currentArticleId);
+    showToast('回复成功');
+  } catch (err) {
+    showToast('回复失败: ' + err.message);
+  }
+}
+
+async function deleteComment(commentId) {
+  if (!confirm('确定要删除这条评论吗？')) return;
+  try {
+    await api('/api/comments/' + commentId, { method: 'DELETE' });
+    loadComments(currentArticleId);
+    showToast('评论已删除');
+  } catch (err) {
+    showToast('删除失败: ' + err.message);
+  }
+}
+
+// ===== Admin =====
+async function openAdminPanel() {
+  try {
+    const users = await api('/api/auth/users');
+    document.getElementById('adminOverlay').classList.remove('hidden');
+    document.getElementById('adminUserList').innerHTML = '<table><tr><th>ID</th><th>用户名</th><th>昵称</th><th>角色</th><th>注册时间</th></tr>' +
+      users.map(u => '<tr><td>' + u.id + '</td><td>' + escapeHtml(u.username) + '</td><td>' + escapeHtml(u.nickname) + '</td><td>' + u.role + '</td><td>' + formatDate(u.created_at) + '</td></tr>').join('') +
+      '</table>';
+  } catch (err) {
+    showToast('加载失败: ' + err.message);
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderAvatarHtml(name, avatar, size) {
+  var s = size || 24;
+  var letter = (name || '?')[0].toUpperCase();
+  if (avatar) {
+    return '<div style="width:' + s + 'px;height:' + s + 'px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:' + (s*0.4) + 'px;font-weight:700;color:#0f172a;flex-shrink:0;overflow:hidden;background:url(' + avatar + ') center/cover no-repeat;vertical-align:middle"></div>';
+  }
+  return '<div style="width:' + s + 'px;height:' + s + 'px;border-radius:50%;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:' + (s*0.4) + 'px;font-weight:700;color:#0f172a;flex-shrink:0;vertical-align:middle">' + letter + '</div>';
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+// ===== Sort State =====
+var sortState = {};
+
+// ===== Like / Unlike =====
+async function toggleLike(articleId, btn) {
+  var user = getUser();
+  if (!user) { showToast('请先登录'); document.getElementById('loginBtn').click(); return; }
+  try {
+    var data = await api('/api/articles/' + articleId + '/like', { method: 'POST' });
+    btn.dataset.liked = data.liked;
+    btn.querySelector('.count').textContent = data.likes_count;
+    btn.classList.toggle('liked', data.liked);
+  } catch (err) { showToast('操作失败: ' + err.message); }
+}
+
+// ===== Sort =====
+function changeSort(cat, sort) {
+  sortState[cat] = sort;
+  var bar = document.getElementById('sort-bar-' + cat);
+  if (bar) {
+    bar.querySelectorAll('.sort-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.sort === sort);
+    });
+  }
+  loadCommunityContent(cat);
+}
+
+// ===== Profile =====
+async function openProfileModal() {
+  var user = getUser();
+  if (!user) return;
+  document.getElementById('profileOverlay').classList.remove('hidden');
+  document.getElementById('profileName').textContent = user.nickname || user.username;
+  document.getElementById('profileRole').textContent = user.role === 'admin' ? '管理员' : '普通用户';
+  document.getElementById('profileAvatar').textContent = (user.nickname || user.username)[0].toUpperCase();
+  document.getElementById('profileNickname').value = user.nickname || '';
+  document.getElementById('profileAvatarFile').value = '';
+  // 如果有头像，显示预览
+  var preview = document.getElementById('avatarPreview');
+  var profileAvatar = document.getElementById('profileAvatar');
+  if (user.avatar) {
+    preview.src = user.avatar;
+    preview.style.display = 'block';
+    profileAvatar.textContent = '';
+    profileAvatar.style.backgroundImage = 'url(' + user.avatar + ')';
+    profileAvatar.style.backgroundSize = 'cover';
+    profileAvatar.style.backgroundPosition = 'center';
+  } else {
+    preview.style.display = 'none';
+    profileAvatar.textContent = (user.nickname || user.username)[0].toUpperCase();
+    profileAvatar.style.backgroundImage = '';
+    profileAvatar.style.backgroundColor = 'var(--accent)';
+  }
+  document.getElementById('profileError').textContent = '';
+  document.getElementById('profileSuccess').textContent = '';
+  document.querySelectorAll('.profile-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.ptab === 'edit');
+  });
+  document.getElementById('ptab-edit').classList.remove('hidden');
+  document.getElementById('ptab-password').classList.add('hidden');
+}
+
+function closeProfileModal() {
+  document.getElementById('profileOverlay').classList.add('hidden');
+}
+
+async function saveProfile() {
+  var nickname = document.getElementById('profileNickname').value.trim();
+  var fileInput = document.getElementById('profileAvatarFile');
+  if (!nickname) { showToast('昵称不能为空'); return; }
+  try {
+    var avatarUrl = '';
+    // 如果有选文件，先上传
+    if (fileInput.files && fileInput.files[0]) {
+      var formData = new FormData();
+      formData.append('avatar', fileInput.files[0]);
+      var uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+      var uploadData = await uploadRes.json();
+      if (!uploadRes.ok) throw new Error(uploadData.message || '上传失败');
+      avatarUrl = uploadData.url;
+      document.getElementById('profileError').textContent = '';
+    }
+    var body = { nickname: nickname };
+    if (avatarUrl) body.avatar = avatarUrl;
+
+    var data = await api('/api/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+    setUser(data.user);
+    updateAuthUI();
+    document.getElementById('profileName').textContent = nickname;
+    var profileAvatar = document.getElementById('profileAvatar');
+    if (avatarUrl) {
+      document.getElementById('avatarPreview').src = avatarUrl;
+      document.getElementById('avatarPreview').style.display = 'block';
+      profileAvatar.textContent = '';
+      profileAvatar.style.backgroundImage = 'url(' + avatarUrl + ')';
+      profileAvatar.style.backgroundSize = 'cover';
+      profileAvatar.style.backgroundPosition = 'center';
+    } else {
+      profileAvatar.textContent = nickname[0].toUpperCase();
+    }
+    document.getElementById('profileSuccess').textContent = '✅ 保存成功';
+    showToast('个人信息已更新');
+  } catch (err) { document.getElementById('profileError').textContent = err.message; }
+}
+
+async function changePassword() {
+  var oldPw = document.getElementById('pwOld').value;
+  var newPw = document.getElementById('pwNew').value;
+  var confirmPw = document.getElementById('pwConfirm').value;
+  if (!oldPw || !newPw) { document.getElementById('profileError').textContent = '请填写完整'; return; }
+  if (newPw.length < 6) { document.getElementById('profileError').textContent = '新密码至少6位'; return; }
+  if (newPw !== confirmPw) { document.getElementById('profileError').textContent = '两次密码不一致'; return; }
+  try {
+    await api('/api/auth/password', {
+      method: 'PUT',
+      body: JSON.stringify({ oldPassword: oldPw, newPassword: newPw }),
+    });
+    document.getElementById('pwOld').value = '';
+    document.getElementById('pwNew').value = '';
+    document.getElementById('pwConfirm').value = '';
+    document.getElementById('profileError').textContent = '';
+    document.getElementById('profileSuccess').textContent = '✅ 密码修改成功';
+    showToast('密码修改成功');
+  } catch (err) { document.getElementById('profileError').textContent = err.message; }
+}
+
+// ===== Profile tab switching =====
+document.addEventListener('click', function(e) {
+  var tab = e.target.closest('.profile-tab');
+  if (!tab) return;
+  document.querySelectorAll('.profile-tab').forEach(function(t) { t.classList.remove('active'); });
+  tab.classList.add('active');
+  document.getElementById('ptab-edit').classList.toggle('hidden', tab.dataset.ptab !== 'edit');
+  document.getElementById('ptab-password').classList.toggle('hidden', tab.dataset.ptab !== 'password');
+  document.getElementById('profileError').textContent = '';
+  document.getElementById('profileSuccess').textContent = '';
+});
+
+// ===== Event Bindings =====
+document.addEventListener('DOMContentLoaded', function() {
+  // Auth - close only via X button, not by clicking outside
+  document.getElementById('loginBtn').addEventListener('click', () => openAuthModal('login'));
+  document.getElementById('closeAuth').addEventListener('click', closeAuthModal);
+  document.querySelectorAll('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.getElementById('authOverlay').querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('authSubmitBtn').textContent = this.dataset.authTab === 'login' ? '登录' : '注册';
+      document.getElementById('authNicknameField').classList.toggle('hidden', this.dataset.authTab === 'login');
+      document.getElementById('authError').textContent = '';
+    });
+  });
+  document.getElementById('authSubmitBtn').addEventListener('click', handleAuth);
+
+  // User dropdown
+  document.getElementById('userInfo').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('hidden');
+  });
+  document.addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.add('hidden');
+  });
+  document.getElementById('dropdownLogout').addEventListener('click', handleLogout);
+  document.getElementById('dropdownWrite').addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.add('hidden');
+    openArticleEditor(null);
+  });
+  document.getElementById('dropdownProfile').addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.add('hidden');
+    openProfileModal();
+  });
+  document.getElementById('dropdownPassword').addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.add('hidden');
+    openProfileModal();
+    // Switch to password tab
+    setTimeout(function() {
+      document.querySelectorAll('.profile-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelector('.profile-tab[data-ptab="password"]').classList.add('active');
+      document.getElementById('ptab-edit').classList.add('hidden');
+      document.getElementById('ptab-password').classList.remove('hidden');
+    }, 100);
+  });
+  document.getElementById('closeProfile').addEventListener('click', closeProfileModal);
+  document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
+  document.getElementById('savePasswordBtn').addEventListener('click', changePassword);
+  // 头像文件预览
+  document.getElementById('profileAvatarFile').addEventListener('change', function() {
+    var file = this.files && this.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var preview = document.getElementById('avatarPreview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('dropdownAdmin').addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.add('hidden');
+    openAdminPanel();
+  });
+
+  // Article editor - only close on explicit close button click
+  document.getElementById('closeArticleEditor').addEventListener('click', closeArticleEditor);
+  document.getElementById('saveArticleBtn').addEventListener('click', saveArticle);
+
+  // Admin
+  document.getElementById('closeAdmin').addEventListener('click', function() {
+    document.getElementById('adminOverlay').classList.add('hidden');
+  });
+
+  // Init auth UI
+  currentUser = getUser();
+  updateAuthUI();
+});
+
+
+
+// ===== Community Sections (per-tab user content) =====
+function initCommunitySections() {
+  var cats = ['fault', 'knowledge', 'practice', 'project', 'interview'];
+  cats.forEach(function(cat) {
+    var section = document.getElementById('tab-' + cat);
+    if (!section) return;
+    if (document.getElementById('comm-top-' + cat)) return;
+
+    // Top bar with add button at the top of the section
+    var topBar = document.createElement('div');
+    topBar.id = 'comm-top-' + cat;
+    topBar.style.cssText = 'display:flex;justify-content:flex-end;margin-bottom:16px;';
+    topBar.innerHTML = '<button class="quiz-btn" onclick="openCommunityEditor(\'' + cat + '\')" style="width:auto;padding:8px 20px;font-size:.85rem">+ 添加内容</button>';
+    section.insertBefore(topBar, section.firstChild);
+
+    // Community content list at bottom
+    var header = document.createElement('div');
+    header.className = 'comm-header';
+    header.id = 'comm-section-' + cat;
+    header.innerHTML = '<h2>📝 用户贡献</h2>';
+    section.appendChild(header);
+
+    // Sort bar below header
+    var sortBar = document.createElement('div');
+    sortBar.id = 'sort-bar-' + cat;
+    sortBar.style.cssText = 'display:flex;gap:8px;margin-bottom:12px;';
+    sortBar.innerHTML =
+        '<button class="sort-btn active" data-sort="latest" onclick="changeSort(\'' + cat + '\', \'latest\')">⏱ 最新</button>' +
+        '<button class="sort-btn" data-sort="popular" onclick="changeSort(\'' + cat + '\', \'popular\')">🔥 热门</button>';
+    section.appendChild(sortBar);
+
+    var container = document.createElement('div');
+    container.id = 'comm-list-' + cat;
+    container.innerHTML = '<div class="comm-empty">加载中...</div>';
+    section.appendChild(container);
+  });
+}
+
+function openCommunityEditor(cat) {
+  var user = getUser();
+  if (!user) { showToast('请先登录'); document.getElementById('loginBtn').click(); return; }
+  var labels = { fault:'故障分析', knowledge:'运维知识', practice:'实操演练', project:'项目学习', interview:'面试高频' };
+  document.getElementById('articleEditorOverlay').classList.remove('hidden');
+  document.getElementById('articleEditorTitle').textContent = '✏️ 添加内容 - ' + (labels[cat] || cat);
+  document.getElementById('saveArticleBtn').textContent = '发布';
+  document.getElementById('editArticleId').value = '';
+  document.getElementById('articleTitle').value = '';
+  document.getElementById('articleCategory').value = cat;
+  document.getElementById('articleTags').value = '';
+  document.getElementById('articleSummary').value = '';
+  document.getElementById('articleContent').value = '';
+}
+
+async function loadCommunityContent(cat) {
+  var container = document.getElementById('comm-list-' + cat);
+  if (!container) return;
+  var sort = sortState[cat] || 'latest';
+  try {
+    var data = await api('/api/articles?category=' + cat + '&limit=50&sort=' + sort);
+    if (data.articles.length === 0) {
+      container.innerHTML = '<div class="comm-empty">暂无用户贡献内容，点击上方按钮添加第一篇</div>';
+      return;
+    }
+    container.innerHTML = data.articles.map(function(a) { return renderCommunityCard(a); }).join('');
+  } catch (err) {
+    container.innerHTML = '<div class="comm-empty">加载失败: ' + escapeHtml(err.message) + '</div>';
+  }
+}
+
+function renderCommunityCard(a) {
+  var summary = escapeHtml(a.summary || (a.content || '').substring(0, 120));
+  var tags = (a.tags || '').split(',').filter(Boolean).map(function(t) {
+    return '<span class="tag tag-general">' + escapeHtml(t.trim()) + '</span>';
+  }).join(' ');
+  var cat = a.category || '';
+  var user = getUser();
+  var canDelete = user && (user.id === a.user_id || user.role === 'admin');
+  var deleteBtn = canDelete
+    ? '<button class="del-btn" onclick="event.stopPropagation();deleteCommunityArticle(' + a.id + ')" title="删除" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:.9rem;padding:2px 6px">🗑️</button>'
+    : '';
+  var likesCount = a.likes_count || 0;
+  return '<div class="comm-card" id="comm-card-' + a.id + '">' +
+    '<div class="comm-card-header" onclick="toggleCommunityContent(' + a.id + ', \'' + cat + '\')">' +
+      '<div>' +
+        '<h4>' + escapeHtml(a.title) + '</h4>' +
+        '<div class="comm-card-meta">' + renderAvatarHtml(a.nickname||a.username, a.avatar, 20) + ' ' + escapeHtml(a.nickname||a.username) + ' · 📅 ' + formatDate(a.created_at) + '</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:8px">' +
+        '<button class="like-btn" onclick="event.stopPropagation();toggleLike(' + a.id + ', this)" data-liked="false">' +
+          '<span>❤</span><span class="count">' + likesCount + '</span>' +
+        '</button>' +
+        deleteBtn +
+        '<span class="comm-toggle-icon">▸</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="comm-card-body" id="comm-body-' + a.id + '">' +
+      '<div class="comm-card-content" id="comm-content-' + a.id + '">' + summary + '</div>' +
+      (tags ? '<div style="padding:0 20px 8px">' + tags + '</div>' : '') +
+      '<div class="comm-inline-comments" id="comm-comments-' + a.id + '">' +
+        '<div class="comment-form">' +
+          '<textarea id="comm-input-' + a.id + '" placeholder="写下你的评论..." rows="1" style="flex:1;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;resize:vertical;min-height:36px;font-family:inherit;outline:none"></textarea>' +
+          '<button class="quiz-btn" onclick="submitCommunityComment(' + a.id + ')" style="width:auto;padding:6px 16px;font-size:.8rem;white-space:nowrap">评论</button>' +
+        '</div>' +
+        '<div id="comm-comment-list-' + a.id + '"><p style="color:var(--text-secondary);font-size:.85rem;margin:8px 0">点击展开查看评论</p></div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+async function deleteCommunityArticle(id) {
+  if (!confirm('确定要删除这条内容吗？')) return;
+  try {
+    await api('/api/articles/' + id, { method: 'DELETE' });
+    showToast('已删除');
+    // Find the tab this card belongs to and refresh community list
+    var card = document.getElementById('comm-card-' + id);
+    if (card) {
+      var tabSection = card.closest('[id^="tab-"]');
+      if (tabSection) {
+        loadCommunityContent(tabSection.id.replace('tab-', ''));
+      }
+    }
+  } catch (err) {
+    showToast('删除失败: ' + err.message);
+  }
+}
+
+async function toggleCommunityContent(id, cat) {
+  var card = document.getElementById('comm-card-' + id);
+  var body = document.getElementById('comm-body-' + id);
+  if (!card || !body) return;
+  if (card.classList.contains('open')) { card.classList.remove('open'); return; }
+  card.classList.add('open');
+  var cd = document.getElementById('comm-content-' + id);
+  if (cd && !cd.dataset.loaded) {
+    try {
+      var article = await api('/api/articles/' + id);
+      cd.innerHTML = article.content || escapeHtml(article.summary || '');
+      cd.dataset.loaded = '1';
+    } catch(e) {}
+  }
+  await loadCommunityComments(id, cat);
+}
+
+var communityCommentSort = {};
+
+async function loadCommunityComments(id, cat) {
+  var list = document.getElementById('comm-comment-list-' + id);
+  if (!list) return;
+  if (!communityCommentSort[cat]) communityCommentSort[cat] = 'newest';
+  var sort = communityCommentSort[cat];
+  try {
+    var comments = await api('/api/articles/' + id + '/comments?sort=' + sort);
+    var sortBar = '<div style="display:flex;gap:6px;margin-bottom:8px">' +
+      '<button class="sort-btn ' + (sort === 'newest' ? 'active' : '') + '" onclick="event.stopPropagation();changeCommunityCommentSort(\'' + id + '\',\'' + cat + '\',\'newest\')" style="font-size:.75rem;padding:3px 10px">⏱ 最新</button>' +
+      '<button class="sort-btn ' + (sort === 'popular' ? 'active' : '') + '" onclick="event.stopPropagation();changeCommunityCommentSort(\'' + id + '\',\'' + cat + '\',\'popular\')" style="font-size:.75rem;padding:3px 10px">🔥 最热</button>' +
+      '</div>';
+    if (comments.length === 0) {
+      list.innerHTML = sortBar + '<p style="color:var(--text-secondary);font-size:.85rem;margin:8px 0">暂无评论</p>';
+    } else {
+      list.innerHTML = sortBar + renderCommunityComments(comments, 0, id, cat);
+    }
+  } catch (err) {
+    list.innerHTML = '<p style="color:var(--danger);font-size:.85rem">加载评论失败</p>';
+  }
+}
+
+function changeCommunityCommentSort(id, cat, sort) {
+  communityCommentSort[cat] = sort;
+  loadCommunityComments(id, cat);
+}
+
+function renderCommunityComments(comments, depth, artId, cat) {
+  var user = getUser();
+  return comments.map(function(c) {
+    var canDel = user && (user.id === c.user_id || user.role === 'admin');
+    var likesCount = c.likes_count || 0;
+    var likeBtn = '<button class="like-btn" onclick="event.stopPropagation();toggleCommentLike(' + c.id + ', this)" data-liked="false">' +
+      '<span>❤</span><span class="count">' + likesCount + '</span></button>';
+    var html = '<div class="comment-item">' +
+      '<div class="meta">' + renderAvatarHtml(c.nickname||c.username, c.avatar, 20) + ' <strong>' + escapeHtml(c.nickname||c.username) + '</strong> ' + formatDate(c.created_at) + '</div>' +
+      '<div class="content" style="padding-left:2em">' + escapeHtml(c.content) + '</div>' +
+      '<div class="actions">' +
+        likeBtn +
+        (user ? '<button onclick="showCommunityReplyForm(' + c.id + ',' + artId + ')">回复</button>' : '') +
+        (canDel ? '<button class="del-btn" onclick="deleteCommunityComment(' + c.id + ',' + artId + ')">删除</button>' : '') +
+      '</div>';
+    if (c.replies && c.replies.length > 0) {
+      var flat = flattenReplies(c.replies, c.nickname || c.username);
+      html += '<div class="reply-toggle" onclick="toggleReplies(this)">💬 ' + flat.length + ' 条回复 ▸</div>';
+      html += '<div class="reply-container" style="display:none">' +
+        flat.map(function(r) { return renderReplyItem(r, getUser() && (getUser().id === r.comment.user_id || getUser().role === 'admin'), artId); }).join('') +
+      '</div>';
+    }
+    html += '</div>';
+    return html;
+  }).join('');
+}
+
+function showCommunityReplyForm(cid, artId) {
+  var existing = document.getElementById('comm-reply-form-' + cid);
+  if (existing) { existing.remove(); return; }
+  var form = document.createElement('div');
+  form.className = 'reply-form';
+  form.id = 'comm-reply-form-' + cid;
+  form.innerHTML = '<textarea id="comm-reply-input-' + cid + '" placeholder="写下回复..." rows="1"></textarea>' +
+    '<button onclick="submitCommunityReply(' + cid + ',' + artId + ')">回复</button>' +
+    '<button class="cancel-btn" onclick="this.parentElement.remove()">取消</button>';
+  var items = document.querySelectorAll('#comm-comment-list-' + artId + ' .comment-item');
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].innerHTML.indexOf('showCommunityReplyForm(' + cid + ',') >= 0) {
+      items[i].after(form); return;
+    }
+  }
+  var list = document.getElementById('comm-comment-list-' + artId);
+  if (list) list.appendChild(form);
+}
+
+async function submitCommunityComment(artId) {
+  var input = document.getElementById('comm-input-' + artId);
+  if (!input) return;
+  var c = input.value.trim();
+  if (!c) { showToast('评论不能为空'); return; }
+  var user = getUser();
+  if (!user) { showToast('请先登录'); document.getElementById('loginBtn').click(); return; }
+  try {
+    await api('/api/articles/' + artId + '/comments', { method: 'POST', body: JSON.stringify({ content: c }) });
+    input.value = '';
+    await loadCommunityComments(artId, '');
+    showToast('评论成功');
+  } catch (err) { showToast('评论失败: ' + err.message); }
+}
+
+async function submitCommunityReply(pid, artId) {
+  var input = document.getElementById('comm-reply-input-' + pid);
+  if (!input) return;
+  var c = input.value.trim();
+  if (!c) { showToast('回复不能为空'); return; }
+  try {
+    await api('/api/articles/' + artId + '/comments', { method: 'POST', body: JSON.stringify({ content: c, parent_id: pid }) });
+    input.value = '';
+    var f = document.getElementById('comm-reply-form-' + pid);
+    if (f) f.remove();
+    await loadCommunityComments(artId, '');
+    showToast('回复成功');
+  } catch (err) { showToast('回复失败: ' + err.message); }
+}
+
+async function deleteCommunityComment(cid, artId) {
+  if (!confirm('确定要删除这条评论吗？')) return;
+  try {
+    await api('/api/comments/' + cid, { method: 'DELETE' });
+    await loadCommunityComments(artId, '');
+    showToast('评论已删除');
+  } catch (err) { showToast('删除失败: ' + err.message); }
+}
+
+// Hook: init community when switching to knowledge tabs
+document.querySelectorAll('.tab').forEach(function(tab) {
+  var cat = tab.dataset.tab;
+  if (['fault','knowledge','practice','project','interview'].indexOf(cat) >= 0) {
+    tab.addEventListener('click', function() {
+      setTimeout(function() { initCommunitySections(); loadCommunityContent(cat); }, 50);
+    });
+  }
+});
+
+// Init for default active tab on page load
+if (document.getElementById('tab-fault') && !document.getElementById('tab-fault').classList.contains('hidden')) {
+  setTimeout(function() { initCommunitySections(); loadCommunityContent('fault'); }, 300);
+}
+
+</script>
+</body>
+</html>

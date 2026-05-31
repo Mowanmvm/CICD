@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"process.stdin.on\\('data',d=>{const r=JSON.parse\\(d\\);console.log\\('Articles count:', r.total\\)}\\)\")",
+      "Bash(netstat -ano)",
+      "Bash(awk '{print $5}')"
+    ]
+  }
+}
