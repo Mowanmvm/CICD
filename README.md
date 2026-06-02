@@ -5,7 +5,7 @@
 
 ---
 
-## 📖 目录
+## 目录
 
 - [第一章：Linux 服务器初始化](#第一章linux-服务器初始化)
 - [第二章：Docker 与 Docker Compose 安装](#第二章docker-与-docker-compose-安装)
