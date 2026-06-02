@@ -8,7 +8,7 @@
 #   - 启动 Jenkins
 #
 # 使用: sudo bash setup.sh
-# ⚠️ 需要 root 权限运行
+# 需要 root 权限运行
 # ============================================================
 
 set -euo pipefail
@@ -35,13 +35,13 @@ info "  SRE 运维学习平台 — Linux 一键安装"
 info "========================================"
 
 # ========== 配置变量 ==========
-# ⚠️ 请修改为你的 GitHub 仓库地址
+# 请修改为你的 GitHub 仓库地址
 GIT_REPO="https://github.com/<your-username>/<your-repo>.git"
 APP_DIR="/opt/app"
 JENKINS_DATA_DIR="/opt/docker-data/jenkins-home"
 
 # ========== 0. 检测操作系统 ==========
-info "🔍 检测操作系统..."
+info "检测操作系统..."
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     OS=$ID
@@ -53,7 +53,7 @@ else
 fi
 
 # ========== 1. 系统更新 ==========
-info "📦 更新系统包..."
+info "更新系统包..."
 case $OS in
     ubuntu|debian)
         apt update && apt upgrade -y
@@ -68,10 +68,10 @@ case $OS in
         exit 1
         ;;
 esac
-info "✅ 系统更新完成"
+info "系统更新完成"
 
 # ========== 2. 安装 Docker ==========
-info "🐳 安装 Docker..."
+info "安装 Docker..."
 if command -v docker &> /dev/null; then
     info "  Docker 已安装，版本: $(docker --version)"
 else
@@ -80,11 +80,11 @@ else
     # 启动 Docker 并设置为开机自启
     systemctl enable docker
     systemctl start docker
-    info "✅ Docker 安装完成，版本: $(docker --version)"
+    info "Docker 安装完成，版本: $(docker --version)"
 fi
 
 # ========== 3. 安装 Docker Compose ==========
-info "🐳 安装 Docker Compose..."
+info "安装 Docker Compose..."
 if docker compose version &> /dev/null; then
     info "  Docker Compose 已安装，版本: $(docker compose version)"
 else
@@ -97,11 +97,11 @@ else
             yum install -y docker-compose-plugin || dnf install -y docker-compose-plugin
             ;;
     esac
-    info "✅ Docker Compose 安装完成"
+    info "docker Compose 安装完成"
 fi
 
 # ========== 4. 克隆项目代码 ==========
-info "📂 克隆项目代码..."
+info "克隆项目代码..."
 if [ -d "${APP_DIR}/.git" ]; then
     info "  项目已存在，更新代码..."
     cd "${APP_DIR}"
@@ -109,26 +109,26 @@ if [ -d "${APP_DIR}/.git" ]; then
 else
     mkdir -p "${APP_DIR}"
     git clone "${GIT_REPO}" "${APP_DIR}"
-    info "✅ 代码克隆完成"
+    info "代码克隆完成"
 fi
 
 # ========== 5. 创建 Jenkins 数据目录 ==========
-info "📁 创建 Jenkins 数据目录..."
+info "创建 Jenkins 数据目录..."
 mkdir -p "${JENKINS_DATA_DIR}"
 # Jenkins 容器内 jenkins 用户 uid=1000，所以这里设置所有者为 1000:1000
 chown 1000:1000 "${JENKINS_DATA_DIR}"
-info "✅ 数据目录: ${JENKINS_DATA_DIR}"
+info "数据目录: ${JENKINS_DATA_DIR}"
 
 # ========== 6. 启动 Jenkins ==========
-info "🚀 启动 Jenkins..."
+info "启动 Jenkins..."
 cd "${APP_DIR}"
 docker compose -f ci-cd-tutorial/linux/docker-compose.jenkins.yml up -d
 
 # 等待 Jenkins 启动
-info "⏳ 等待 Jenkins 启动..."
+info "等待 Jenkins 启动..."
 for i in $(seq 1 30); do
     if docker logs jenkins-server 2>&1 | grep -q "Jenkins is fully up and running"; then
-        info "✅ Jenkins 已就绪"
+        info "Jenkins 已就绪"
         break
     fi
     sleep 2
@@ -140,18 +140,18 @@ PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || echo "获取失败")
 
 echo ""
 info "========================================"
-info "  🎉 安装完成！"
+info "  安装完成！"
 info "========================================"
 echo ""
-info "  🔗 Jenkins 地址:"
+info "     Jenkins 地址:"
 info "     http://${PUBLIC_IP}:8080"
 echo ""
-info "  🔑 初始管理员密码:"
+info "  初始管理员密码:"
 info "     docker exec jenkins-server cat /var/jenkins_home/secrets/initialAdminPassword"
 echo ""
-info "  📂 项目目录: ${APP_DIR}"
+info "  项目目录: ${APP_DIR}"
 echo ""
-info "  📝 后续步骤:"
+info "  后续步骤:"
 info "  1. 访问 Jenkins 完成初始化"
 info "  2. 安装插件: Pipeline, Docker Pipeline, GitHub Integration"
 info "  3. 添加凭据: GitHub Token, Docker Hub Token"
