@@ -177,7 +177,6 @@ sudo tee /etc/docker/daemon.json <<-'EOF'
 }
 EOF
 
-# **逐行解释 daemon.json：**
 # registry-mirrors: Docker Hub 镜像加速地址列表
 #   中科大 (ustc) 和网易 (163) 是国内常用的加速器
 #   适用于从 Docker Hub 拉取镜像较慢的服务器
@@ -248,7 +247,7 @@ curl http://localhost
 
 ### 3.2 编写 Jenkins Compose 文件
 
-> **📄 对应文件**：[docker-compose.jenkins.yml](docker-compose.jenkins.yml)
+> **对应文件**：[docker-compose.jenkins.yml](docker-compose.jenkins.yml)
 
 ```yaml
 version: '3.8'
