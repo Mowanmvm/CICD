@@ -79,12 +79,12 @@ info "========================================"
 DEPLOY_DIR="/opt/sre-app/${ENV}"
 mkdir -p "${DEPLOY_DIR}"
 cd "${DEPLOY_DIR}"
-info "📁 部署目录: ${DEPLOY_DIR}"
+info "部署目录: ${DEPLOY_DIR}"
 
 # ========== 2. 生成 docker-compose.yml ==========
 # 使用 heredoc (cat << EOF > file) 动态写入
 # 优点: 灵活注入变量，无需模板文件
-info "📄 生成 docker-compose.yml..."
+info "生成 docker-compose.yml..."
 cat > docker-compose.yml << YAML
 version: '3.8'
 
@@ -138,18 +138,18 @@ YAML
 ok "docker-compose.yml 已生成"
 
 # ========== 3. 拉取最新镜像 ==========
-info "⬇️  拉取 ${REGISTRY}/${IMAGE}:${TAG}..."
+info "拉取 ${REGISTRY}/${IMAGE}:${TAG}..."
 docker compose pull app
 ok "镜像拉取完成"
 
 # ========== 4. 重新创建服务 ==========
-info "🚀 启动服务..."
+info "启动服务..."
 # --remove-orphans: 清理 docker-compose.yml 中不存在的旧容器
 docker compose up -d --remove-orphans
 ok "服务已启动"
 
 # ========== 5. 等待服务就绪 ==========
-info "⏳ 等待应用就绪..."
+info "等待应用就绪..."
 for i in $(seq 1 12); do
     if curl -sf "http://localhost:${PORT}/api/health" > /dev/null 2>&1; then
         ok "应用已就绪 (第 ${i} 秒)"
@@ -171,7 +171,7 @@ ok "清理完成"
 # ========== 7. 输出部署状态 ==========
 echo ""
 info "========================================"
-info "  ✅ 部署完成！"
+info "  部署完成！"
 info "  环境: ${ENV}"
 info "  镜像: ${REGISTRY}/${IMAGE}:${TAG}"
 info "  访问: http://localhost:${PORT}"
