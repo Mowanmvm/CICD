@@ -150,7 +150,7 @@ docker compose version
 # 将当前用户加入 docker 组（避免每次 sudo）
 sudo usermod -aG docker $USER
 
-# ⚠️ 重要：退出重新登录使组变更生效
+#  重要：退出重新登录使组变更生效
 # 或者使用以下命令立即生效（无需退出）
 newgrp docker
 
@@ -328,7 +328,7 @@ docker exec jenkins-server cat /var/jenkins_home/secrets/initialAdminPassword
 
 浏览器访问 `http://<你的服务器IP>:8080`，输入密码完成初始化。
 
-> ⚠️ **安全提示**：如果服务器有公网 IP，建议先配好 Nginx 反代 + HTTPS（见第五章），或者用 ufw 限制 8080 端口仅允许内网访问。
+> 安全提示：如果服务器有公网 IP，建议先配好 Nginx 反代 + HTTPS（见第五章），或者用 ufw 限制 8080 端口仅允许内网访问。
 
 ---
 
@@ -724,7 +724,7 @@ log_info "========================================"
 DEPLOY_DIR="/opt/sre-app/${ENV}"
 mkdir -p "${DEPLOY_DIR}"
 cd "${DEPLOY_DIR}"
-log_info "📁 部署目录: ${DEPLOY_DIR}"
+log_info "部署目录: ${DEPLOY_DIR}"
 
 # ========== 生成 docker-compose.yml ==========
 # 使用 cat << EOF > file 生成配置文件
@@ -779,30 +779,30 @@ volumes:
   sre-mysql-data-${ENV}:
 EOF
 
-log_info "📄 docker-compose.yml 已生成"
+log_info "docker-compose.yml 已生成"
 
 # ========== 拉取最新镜像 ==========
-log_info "⬇️  拉取最新镜像..."
+log_info " 拉取最新镜像..."
 docker compose pull app
-log_info "✅ 镜像拉取完成"
+log_info "镜像拉取完成"
 
 # ========== 部署服务 ==========
-log_info "🚀 启动服务..."
+log_info "启动服务..."
 # --remove-orphans: 删除 compose 文件中不存在的旧容器
 docker compose up -d --remove-orphans
-log_info "✅ 服务已启动"
+log_info "服务已启动"
 
 # ========== 清理旧镜像 ==========
-log_info "🧹 清理旧镜像..."
+log_info "清理旧镜像..."
 # docker image prune -f: 删除未被使用的 dangling 镜像
 # docker image prune -a -f: 删除所有未被使用的镜像（保留最新）
 docker image prune -f
-log_info "✅ 清理完成"
+log_info "清理完成"
 
 # ========== 输出状态 ==========
 echo ""
 log_info "========================================"
-log_info "  ✅ 部署完成！"
+log_info "  部署完成！"
 log_info "  环境: ${ENV}"
 log_info "  镜像: ${REGISTRY}/${IMAGE}:${TAG}"
 log_info "  访问: http://localhost:${PORT}"
@@ -849,7 +849,7 @@ GitHub 仓库 → **Settings → Webhooks → Add webhook**：
 | **Content type** | `application/json`                                                                           |
 | **Secret**       | 留空或设置密钥                                                                                 |
 | **Events**       | `Just the push event`                                                                        |
-| **Active**       | ✅ 勾选                                                                                        |
+| **Active**       | 勾选                                                                                        |
 
 ### 7.3 Webhook 调试技巧
 
@@ -1108,7 +1108,7 @@ echo "$(date): 备份完成: sre_learning_${TIMESTAMP}.sql.gz"
 
 ---
 
-## 📦 Linux 版文件结构
+## Linux 版文件结构
 
 ```
 ci-cd-tutorial/
@@ -1123,7 +1123,7 @@ ci-cd-tutorial/
     └── nginx.conf                            # Nginx 反向代理配置参考
 ```
 
-## 🎯 Linux vs Windows 核心差异总结
+## Linux vs Windows 核心差异总结
 
 | 维度             | Windows            | Linux                      | 为什么                      |
 | ---------------- | ------------------ | -------------------------- | --------------------------- |
@@ -1141,7 +1141,7 @@ ci-cd-tutorial/
 
 ---
 
-## 📚 Linux 命令速查
+## Linux 命令速查
 
 ```bash
 # 文件操作
@@ -1176,4 +1176,4 @@ docker stats --no-stream
 
 ---
 
-> **💡 学习建议**：先在 Linux 虚拟机或云服务器的测试环境完整走一遍流程，熟悉后再上生产环境。遇到问题先看附录的排错指南，或在 Jenkins 的构建日志中搜索错误关键字。本章全部命令和脚本都在 Ubuntu 22.04 上验证通过。
+> **学习建议**：先在 Linux 虚拟机或云服务器的测试环境完整走一遍流程，熟悉后再上生产环境。遇到问题先看附录的排错指南，或在 Jenkins 的构建日志中搜索错误关键字。
