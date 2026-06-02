@@ -43,8 +43,8 @@ pipeline {
                         sh '''
                             cd /app
                             npm ci --only=production
-                            npm run lint 2>/dev/null || echo "⚠️  无 lint 脚本"
-                            npm test 2>/dev/null || echo "⚠️  无测试脚本"
+                            npm run lint 2>/dev/null || echo " 无 lint 脚本"
+                            npm test 2>/dev/null || echo "无测试脚本"
                         '''
                     }
                 }
