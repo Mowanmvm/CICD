@@ -1,4 +1,4 @@
-# 🐧 企业自建 GitHub CI/CD：Linux 服务器部署完整指南
+#  GitHub CI/CD：Linux 服务器部署完整指南
 
 > **适用环境**：Ubuntu 20.04+ / CentOS 7+ / Debian 11+ / Rocky Linux 8+
 > **项目**：SRE 运维学习平台（Node.js + Express + MySQL）
