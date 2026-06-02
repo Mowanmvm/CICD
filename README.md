@@ -1,7 +1,6 @@
 #  GitHub CI/CD：Linux 服务器部署完整指南
 
 > **适用环境**：Ubuntu 20.04+ / CentOS 7+ / Debian 11+ / Rocky Linux 8+
-> **项目**：SRE 运维学习平台（Node.js + Express + MySQL）
 > **目标**：在 Linux 服务器上搭建 Jenkins CI/CD 流水线，实现自动化构建与部署
 
 ---
