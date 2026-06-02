@@ -1,0 +1,78 @@
+# ============================================================
+# SRE 运维学习平台 — Linux Docker Compose 编排
+# 用途：在 Linux 上一键部署应用 + MySQL
+# 使用: docker compose -f ci-cd-tutorial/linux/docker-compose.yml up -d
+# ============================================================
+
+version: '3.8'
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    name: sre-mysql-data    # 指定卷名，方便管理和备份
+  upload-data:
+    name: sre-upload-data
+
+services:
+
+  # ========== MySQL 数据库 ==========
+  mysql:
+    image: mysql:8.0
+    container_name: sre-mysql
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: Mowan123
+      MYSQL_DATABASE: sre_learning
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./backend/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    ports:
+      - "127.0.0.1:3306:3306"    # Linux: 仅监听本机，不暴露到外网
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - app-network
+
+  # ========== 应用服务 ==========
+  app:
+    build:
+      context: .
+      dockerfile: ci-cd-tutorial/linux/Dockerfile
+    image: sre-learning-app:latest
+    container_name: sre-app
+    restart: unless-stopped
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: Mowan123
+      DB_NAME: sre_learning
+      PORT: 3000
+      NODE_ENV: production
+
+    volumes:
+      - upload-data:/app/uploads
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    networks:
+      - app-network
