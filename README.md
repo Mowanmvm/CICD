@@ -568,7 +568,7 @@ sudo firewall-cmd --reload
 
 Jenkinsfile 的内容与 Windows 版本基本一致，但 Linux 部署脚本部分做了优化。
 
-> **📄 对应文件**：[Jenkinsfile](Jenkinsfile)
+> **对应文件**：[Jenkinsfile](Jenkinsfile)
 
 ### 6.1 Linux 环境下的 Jenkinsfile 关键差异
 
@@ -669,7 +669,7 @@ pipeline {
 
 ### 6.2 Linux 部署脚本
 
-> **📄 对应文件**：[deploy.sh](deploy.sh)
+> **对应文件**：[deploy.sh](deploy.sh)
 
 ```bash
 #!/bin/bash
