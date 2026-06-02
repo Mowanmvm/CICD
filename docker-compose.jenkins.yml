@@ -22,7 +22,7 @@ services:
 
     volumes:
       # Jenkins 数据持久化到宿主机的 /opt/docker-data/jenkins-home
-      # ⚠️ Linux 下需要: chown 1000:1000 /opt/docker-data/jenkins-home
+      # Linux 下需要: chown 1000:1000 /opt/docker-data/jenkins-home
       - /opt/docker-data/jenkins-home:/var/jenkins_home
 
       # ==== DinD 核心：挂载宿主机 Docker 环境 ====
